@@ -44,6 +44,7 @@ make graphify-wiki     # re-export wiki from existing graph.json
 | **🛡️ Vanguard** *(Playtest Runner)* | `7dtd-playtest/` | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | Stock-client scenario suite (drive + assert; scores real play) | [`7dtd-playtest/AGENTS.md`](7dtd-playtest/AGENTS.md) |
 | **🏰 Outpost** *(Server Container)* | `7dtd-server-container/` | [`hordeforge/7dtd-server-container`](https://github.com/hordeforge/7dtd-server-container) | LAN dedicated server deployment (Podman container; Navezgane + mods) | [`7dtd-server-container/AGENTS.md`](7dtd-server-container/AGENTS.md) |
 | **📜 Codex** *(Engine Research)* | `7dtd-engine-research/` | [`hordeforge/7dtd-engine-research`](https://github.com/hordeforge/7dtd-engine-research) | Dedicated engine RE narratives (loop, AI, net, save, terrain APIs, Cecil dumps) | [`7dtd-engine-research/AGENTS.md`](7dtd-engine-research/AGENTS.md) |
+| **🏭 Shamway** *(Asset Pipeline)* | `7dtd-asset-pipeline/` | [`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline) | Mod-owned AssetBundle build, editorless bundle synthesis, and the offline gates for silent asset failures | [`7dtd-asset-pipeline/AGENTS.md`](7dtd-asset-pipeline/AGENTS.md) |
 
 ---
 
@@ -58,6 +59,7 @@ Pangea (realearth)   → terrain product (optional world under test)
 BloodWire (zdtd)     → optional Zig dedi (client-wire rewrite; not a mod host)
 Hotwire (connect)    → client join-by-IP / boot skip only
 Vanguard (playtest)  → stock-client gameplay scenarios + host scorer (not a server fix)
+Shamway (assets)     → builds and gates a mod's own AssetBundle (client content, not a server path)
 ```
 
 - Projects are **independent git trees**. None silently installs or rewrites another.
@@ -67,6 +69,7 @@ Vanguard (playtest)  → stock-client gameplay scenarios + host scorer (not a se
 - **Load bots** live only in `7dtd-loadgen` (not under RealEarth tools or zdtd).
 - **Anti-cheat behavior and exploit validation** live only in `7dtd-server-guard`.
 - **Container server deployment** (image, config template, mod staging from sibling `dist/`) lives only in `7dtd-server-container`. It hosts no mod code, no measurement, and no game RE.
+- **Mod asset bundles are built only through `7dtd-asset-pipeline`.** It owns the build, the container and revision gates, and the editorless writer; it owns no art and no mod. Mods keep their own assets, generators and provenance.
 - **Stock-game research lives only in `7dtd-engine-research`.** All reverse-engineering of the shipped dedicated server belongs there (`docs/` and `tools/`). Reimplementation code and mods stay in their own repos. Method: [`7dtd-engine-research/docs/re-methodology.md`](7dtd-engine-research/docs/re-methodology.md).
 - **zdtd-server** does not ship game DLLs or bulk IL; protocol facts come from `7dtd-engine-research/docs`.
 - **zdtd-server is not a 7dtd-server-apm target** (no Mono bridge). It has its **own** metrics/profiler under `zdtd-server/src/apm/`. Validate with loadgen + those dumps. **zdtd-server does not load mods**.

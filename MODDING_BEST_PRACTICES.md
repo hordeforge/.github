@@ -338,6 +338,7 @@ Do not invent removed property names. Prefer `SandboxCode` + remaining dedicated
 - Match **Unity version to the game** for bundles (**2022.3.62f2** on this install).
 - Icons: **`UIAtlases/ItemIconAtlas/`** (Official Mod Interface: path changed A18; legacy `ItemIcons/` is obsolete).
 - Clients must install asset mods; they do **not** push like XML (Community 3.0).
+- A bundle the runtime accepts needs a class-142 `AssetBundle` object and the game's own editor revision. `shamway` ([`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline)) gates both offline, plus stem collisions, icon atlas cells and clip format. It also synthesizes texture, audio and text bundles without Unity; meshes, prefabs and materials still need the editor.
 
 ### XUi (V3 overhaul) (Official wiki + Measured folders)
 
@@ -618,6 +619,7 @@ World sizes: stock RWG comment supports 6k-10k class sizes; pure PC can go large
 | Unity (**game-matched**, here 2022.3.62f2) | Asset bundles only |
 | Notepad++ / any good XML editor | Lightweight XPath (avoid plain Notepad) |
 | `uv` + Python 3.11+ | RealEarth offline pipeline, APM host |
+| `shamway` (`7dtd-asset-pipeline`) | Build, gate and stage a mod AssetBundle; synthesize texture, audio and text bundles with no editor |
 
 ### Reverse engineering
 
