@@ -106,6 +106,17 @@ flowchart TD
 
 ---
 
+## 📚 7DTD Modding Best Practices Guide
+
+HordeForge maintains the canonical **[7 Days to Die Modding Best Practices Guide](MODDING_BEST_PRACTICES.md)** for V3.1.0+ (Henpocalypse). Key engineering rules include:
+- **Mod Hierarchy**: Clean separation between XML XPath modlets, compiled C# Harmony DLLs, and standalone native server engines.
+- **Load Order Rules**: Alphabetical `Mods/` scanning conventions, `0_` prefixing for early-loading performance governors, and `ModInfo.xml` specifications.
+- **EAC-Off Guidelines**: Rules governing Easy Anti-Cheat enforcement (`-noeac`) for C# code mods while maintaining vanilla client join compatibility.
+- **Asset URI Protocols**: Texture, UI atlas, audio, and AssetBundle URI formatting (`#@modfolder:...`).
+- **Distribution Hygiene**: Flat zip structures (`Mods/<FolderName>/ModInfo.xml`) preventing nested directory bugs.
+
+---
+
 ## 💡 Engineering Philosophy
 
 1. **Evidence Over Claims**: Lower CPU usage alone is not an acceptance criterion. Performance improvements are validated using identical worlds, seeds, duration, and bot counts captured via `maci0/7dtd-apm`.
