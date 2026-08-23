@@ -37,7 +37,7 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 |---|---|---|---|---|
 | **☣️ Geiger**<br>*(Server APM)* | [`hordeforge/7dtd-server-apm`](https://github.com/hordeforge/7dtd-server-apm) | `HordeForge_Geiger` | `C# / Python / SQLite` | **HordeForge Server APM**: Performance monitoring, eBPF kernel profiling, eGC freeze detection, and automated regression gating (`EfficientTelemetry`). |
 | **😱 Screamer**<br>*(LoadGen)* | [`hordeforge/7dtd-loadgen`](https://github.com/hordeforge/7dtd-loadgen) | *(CLI Tool)* | `C# (.NET 8.0)` | **HordeForge LoadGen**: Headless LiteNetLib synthetic protocol client generator for high-concurrency 100+ bot server stress testing. |
-| **🥊 Gauntlet**<br>*(Playtest Runner)* | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | *(Python Test Runner)* | `Python 3.13 / C#` | **HordeForge Playtest Runner**: End-to-end automated scenario test suite driving stock 7DTD clients to verify server state and fidelity. |
+| **🛡️ Vanguard**<br>*(Playtest Runner)* | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | *(Python Test Runner)* | `Python 3.13 / C#` | **Vanguard**: End-to-end automated scenario test suite driving stock 7DTD clients to verify server state and fidelity. |
 | **⚡ Hotwire**<br>*(FastConnect)* | [`hordeforge/7dtd-fastconnect`](https://github.com/hordeforge/7dtd-fastconnect) | `HordeForge_Hotwire` | `C#` | **HordeForge FastConnect**: Client utility for direct-IP joining, EULA/intro boot skipping, and headless client test launching. |
 
 ### 🛡️ Security, AI, & Infrastructure
@@ -76,7 +76,7 @@ flowchart TD
     end
 
     subgraph BotAndAutomation ["🤖 Automation & Scenario Testing"]
-        PLAY["hordeforge/7dtd-playtest<br><b>🥊 Gauntlet</b><br><i>Scenario Test Runner</i>"]
+        PLAY["hordeforge/7dtd-playtest<br><b>🛡️ Vanguard</b><br><i>Scenario Test Runner</i>"]
         BOT["hordeforge/7dtd-fps-bots<br><b>🤖 Clanker</b><br><i>Tactical FPS Bots</i>"]
         CONN["hordeforge/7dtd-fastconnect<br><b>⚡ Hotwire</b><br><i>Direct IP FastConnect</i>"]
     end

@@ -8,23 +8,23 @@ This is the **workspace root** canonical guide. Project-specific docs stay for d
 
 | Deeper doc | Owns |
 |---|---|
-| [`7dtd-optimizer/docs/DEVELOPMENT.md`](7dtd-optimizer/docs/DEVELOPMENT.md) | EfficientServer-only workflow (rebuild, feature groups, RE dumps) |
-| [`7dtd-optimizer/docs/ARCHITECTURE.md`](7dtd-optimizer/docs/ARCHITECTURE.md) | Dedicated-server hot path RE notes |
-| [`7dtd-optimizer/docs/HOST_TUNING.md`](7dtd-optimizer/docs/HOST_TUNING.md) | CCD/NUMA/affinity, IRQ, storage; measure-first host ops |
-| [`7dtd-optimizer/docs/OPTIMIZATION_IDEAS.md`](7dtd-optimizer/docs/OPTIMIZATION_IDEAS.md) | Research map: threading, I/O, net, near/far levers |
-| [`7dtd-optimizer/docs/OPTIMIZATION_CANDIDATES.md`](7dtd-optimizer/docs/OPTIMIZATION_CANDIDATES.md) | Graded optim candidates from dedicated RE |
-| [`7dtd-optimizer/docs/SCALE_1000x10000.md`](7dtd-optimizer/docs/SCALE_1000x10000.md) | Thought experiment: data structures for huge MP/AI |
-| [`7dtd-optimizer/docs/SIM_PARALLELISM.md`](7dtd-optimizer/docs/SIM_PARALLELISM.md) | Speeding sim: extract off main, threading policy, hot paths, Amdahl |
-| [`7dtd-optimizer/docs/FEATURES.md`](7dtd-optimizer/docs/FEATURES.md) | EfficientServer patch groups and acceptance notes |
+| [`7dtd-server-optimizer/docs/DEVELOPMENT.md`](7dtd-server-optimizer/docs/DEVELOPMENT.md) | EfficientServer-only workflow (rebuild, feature groups, RE dumps) |
+| [`7dtd-server-optimizer/docs/ARCHITECTURE.md`](7dtd-server-optimizer/docs/ARCHITECTURE.md) | Dedicated-server hot path RE notes |
+| [`7dtd-server-optimizer/docs/HOST_TUNING.md`](7dtd-server-optimizer/docs/HOST_TUNING.md) | CCD/NUMA/affinity, IRQ, storage; measure-first host ops |
+| [`7dtd-server-optimizer/docs/OPTIMIZATION_IDEAS.md`](7dtd-server-optimizer/docs/OPTIMIZATION_IDEAS.md) | Research map: threading, I/O, net, near/far levers |
+| [`7dtd-server-optimizer/docs/OPTIMIZATION_CANDIDATES.md`](7dtd-server-optimizer/docs/OPTIMIZATION_CANDIDATES.md) | Graded optim candidates from dedicated RE |
+| [`7dtd-server-optimizer/docs/SCALE_1000x10000.md`](7dtd-server-optimizer/docs/SCALE_1000x10000.md) | Thought experiment: data structures for huge MP/AI |
+| [`7dtd-server-optimizer/docs/SIM_PARALLELISM.md`](7dtd-server-optimizer/docs/SIM_PARALLELISM.md) | Speeding sim: extract off main, threading policy, hot paths, Amdahl |
+| [`7dtd-server-optimizer/docs/FEATURES.md`](7dtd-server-optimizer/docs/FEATURES.md) | EfficientServer patch groups and acceptance notes |
 | [`research/oss-tools/NOTES.md`](research/oss-tools/NOTES.md) | OSS tools survey (optim lessons from IceCoffee, SphereII, CSMM, …) |
 | [`research/7dtd-ServerTools/NOTES.md`](research/7dtd-ServerTools/NOTES.md) | ServerTools optim-relevant bits |
 | [`research/naiwazi/NOTES.md`](research/naiwazi/NOTES.md) | NAIWAZI ServerKit reconstruction |
 | [`research/docs/loop.md`](research/docs/loop.md) | Complete dedicated server game/sim loop RE map |
 | [`research/docs/INDEX.md`](research/docs/INDEX.md) | Dedicated RE dumps index |
-| [`7dtd-realworld/docs/MODDING_REFERENCES.md`](7dtd-realworld/docs/MODDING_REFERENCES.md) | Link index (sites, Discords, tools) |
-| [`7dtd-realworld/docs/MODLET.md`](7dtd-realworld/docs/MODLET.md) | RealEarth install + YDim expand |
-| [`7dtd-realworld/docs/HEIGHT_LIMITS.md`](7dtd-realworld/docs/HEIGHT_LIMITS.md) | Vertical engine limits |
-| [`7dtd-apm/docs/APM.md`](7dtd-apm/docs/APM.md) | Capture validity and evidence model |
+| [`7dtd-realearth/docs/MODDING_REFERENCES.md`](7dtd-realearth/docs/MODDING_REFERENCES.md) | Link index (sites, Discords, tools) |
+| [`7dtd-realearth/docs/MODLET.md`](7dtd-realearth/docs/MODLET.md) | RealEarth install + YDim expand |
+| [`7dtd-realearth/docs/HEIGHT_LIMITS.md`](7dtd-realearth/docs/HEIGHT_LIMITS.md) | Vertical engine limits |
+| [`7dtd-server-apm/docs/APM.md`](7dtd-server-apm/docs/APM.md) | Capture validity and evidence model |
 
 ### Evidence grades used below
 
@@ -48,7 +48,7 @@ This is the **workspace root** canonical guide. Project-specific docs stay for d
 | Localization vanilla file | `Data/Config/Localization.csv` (not `.txt`) | Measured |
 | XUi folders | `XUi_Common`, `XUi_Menu`, `XUi_InGame` each with `styles.xml`, `templates.xml`, … | Measured |
 | Vertical markers in assembly | `Height255`, `ChunkBlockYDim`, `ChunkBlockYDimM1`, … | Measured (`strings` on dedicated `Assembly-CSharp`) |
-| Local install pins | Client + dedicated both present under Steam common | Measured; see `7dtd-realworld/docs/GAME_VERSION.md` |
+| Local install pins | Client + dedicated both present under Steam common | Measured; see `7dtd-realearth/docs/GAME_VERSION.md` |
 
 ### Install roots on this machine (Measured)
 
@@ -121,12 +121,12 @@ Prefer the **shallowest** layer that solves the problem. Depth costs update frag
 | New console command, session object, JSON config load | **`IModApi.InitMod`** | Patch `Update` every frame for config |
 | Change behavior of existing compiled methods | **Harmony** Prefix/Postfix first | Transpile first; ship second Harmony |
 | Skip work only on dedicated | Harmony + **`GameManager.IsDedicatedServer`** gate | Run presentation skips on clients blindly |
-| Measure host CPU / GC / threads | **`7dtd-apm` host collectors** (layer 0) | Put optimizers in the capturer |
+| Measure host CPU / GC / threads | **`7dtd-server-apm` host collectors** (layer 0) | Put optimizers in the capturer |
 | Measure managed method time | **APM bridge** Harmony instrumentation only | Combine with AI LOD “fixes” in same DLL |
 | Apply reviewed AI/mesh budgets | **EfficientServer** after APM evidence | Invent patches without a baseline |
 | Fake multiplayer load | **`7dtd-loadgen`** LiteNetLib clients | Use real clients for CI soak only if needed |
 | Earth terrain / tall columns | **RealEarth** tiles + **YDim expand** (required for real height) | Put expand in EfficientServer |
-| Choose API for a RealEarth gap | **`7dtd-realworld/docs/GAP_HARMONY_MODLETS.md` §0b** (vs XPath/IModApi/Harmony/XUi/WebMod/bake) | Force XML-only or second Harmony |
+| Choose API for a RealEarth gap | **`7dtd-realearth/docs/GAP_HARMONY_MODLETS.md` §0b** (vs XPath/IModApi/Harmony/XUi/WebMod/bake) | Force XML-only or second Harmony |
 | Admin automation with empty `Mods/` | **Telnet / WebDashboard** | Harmony admin frameworks on crossplay |
 | UI layout / HUD | **XUi XPath** under `Config/XUi_*` + `{% %}` | Pre-3.0 `{binding}` / `XUi/` paths |
 | Sandbox difficulty-style knobs | **`SandboxCode`** in `serverconfig.xml` | Removed V2 property names (see §10) |
@@ -140,19 +140,19 @@ These four projects are independent. None silently installs or mutates another. 
 | Project | Responsibility | Must not | Typical install surface |
 |---|---|---|---|
 | **`7dtd-loadgen`** | Controlled LiteNetLib clients, dedicated start helpers, workload manifests | Measure or optimize the server; ship game-balance content | **No** game `Mods/` entry; external `net8` process |
-| **`7dtd-apm`** | Host + optional bridge **measurement**, compare, budget, export | Apply performance “fixes”; embed loadgen protocol; auto-edit EfficientServer | Host: Python/`uv`. Optional: `Mods/7dtd-apm-bridge/` |
-| **`7dtd-optimizer`** (EfficientServer) | **Reviewed** Harmony optimizations only (AI LOD, dedicated skips, mesh budgets, pathfinding graph throttle) | Ship profiler UI; generate load; invent patches without APM evidence | `Mods/EfficientServer/` (dedicated) |
-| **`7dtd-realworld`** (RealEarth) | Real-world terrain packs, streaming, real-height inject, world bake | Become a general optimizer or APM tool | `Mods/RealEarth/` + engine expand tools; offline Python under `tools/` |
+| **`7dtd-server-apm`** | Host + optional bridge **measurement**, compare, budget, export | Apply performance “fixes”; embed loadgen protocol; auto-edit EfficientServer | Host: Python/`uv`. Optional: `Mods/7dtd-server-apm-bridge/` |
+| **`7dtd-server-optimizer`** (EfficientServer) | **Reviewed** Harmony optimizations only (AI LOD, dedicated skips, mesh budgets, pathfinding graph throttle) | Ship profiler UI; generate load; invent patches without APM evidence | `Mods/EfficientServer/` (dedicated) |
+| **`7dtd-realearth`** (RealEarth) | Real-world terrain packs, streaming, real-height inject, world bake | Become a general optimizer or APM tool | `Mods/RealEarth/` + engine expand tools; offline Python under `tools/` |
 
 ### Offline tooling vs in-game mod (Workspace)
 
 | Kind | Lives in | Loaded by game? | TFM examples |
 |---|---|---|---|
 | In-game mod DLL | `Mods/<Name>/*.dll` | Yes | **net48** (EfficientServer, APM bridge, RealEarth) |
-| Offline pipeline | `7dtd-realworld/tools/` Python | No | uv / Python 3.11+ |
+| Offline pipeline | `7dtd-realearth/tools/` Python | No | uv / Python 3.11+ |
 | Engine height patcher | RealEarth `Tools/` / `engine_patcher` | No (run while game stopped) | net48 console app |
 | Loadgen client | `7dtd-loadgen` | No | **net8.0** |
-| Host APM | `7dtd-apm` Python + optional eBPF | No | uv |
+| Host APM | `7dtd-server-apm` Python + optional eBPF | No | uv |
 
 **Rule:** if it is not loaded through `[MODS]`, it may use modern .NET or Python. If it is loaded by the game, target **net48** and reference **this** install’s Managed assemblies with `Private=false`.
 
@@ -170,9 +170,9 @@ RealEarth can be the world under test; it is not required by the other three.
 | You want to… | Put it in |
 |---|---|
 | Join N simulated clients and wander/die/respawn | `7dtd-loadgen` |
-| Capture CPU, GC, threads, managed timings | `7dtd-apm` (+ optional bridge DLL) |
-| Tighten distant AI / skip dedicated-only work / bound mesh | `7dtd-optimizer` after evidence |
-| Build Earth tiles, stream terrain, expand YDim | `7dtd-realworld` |
+| Capture CPU, GC, threads, managed timings | `7dtd-server-apm` (+ optional bridge DLL) |
+| Tighten distant AI / skip dedicated-only work / bound mesh | `7dtd-server-optimizer` after evidence |
+| Build Earth tiles, stream terrain, expand YDim | `7dtd-realearth` |
 | Change zombie HP / loot tables / recipes | XML modlet (own or separate), not optimizer |
 | Automate admin without blocking crossplay | Telnet / WebAPI (layer 0), not Harmony |
 | Add a HUD globe for RealEarth | RealEarth XUi + assets, not EfficientServer |
@@ -186,7 +186,7 @@ RealEarth can be the world under test; it is not required by the other three.
 |---|---|---|---|
 | `0_TFP_Harmony` | Stock | Stock | Never delete |
 | EfficientServer | Usually no | Yes | Config `DedicatedOnly` default **true** (code) |
-| 7dtd-apm-bridge | No | Optional | Instrumentation + WebMod panel; EAC off when using mods |
+| 7dtd-server-apm-bridge | No | Optional | Instrumentation + WebMod panel; EAC off when using mods |
 | RealEarth | Yes (product) | Yes (MP/tests) | Expand tools required for real height product |
 | TFP_CommandExtensions | Stock sample on DS | Stock | Extra server commands |
 | Xample_MarkersMod | Stock sample on DS | Stock | Example **WebMod** markers plugin |
@@ -484,7 +484,7 @@ Rules:
 5. Treat expand as a **product prerequisite**, not a casual optimization.
 6. Close the game before patching (MODLET.md).
 
-See `7dtd-realworld/docs/MODLET.md` and `HEIGHT_LIMITS.md`.
+See `7dtd-realearth/docs/MODLET.md` and `HEIGHT_LIMITS.md`.
 
 ---
 
@@ -505,7 +505,7 @@ See `7dtd-realworld/docs/MODLET.md` and `HEIGHT_LIMITS.md`.
 | Crossplay | `ServerAllowCrossplay`; empty/mod policy per community; version match | Measured + Community |
 | Userdata | `UserDataFolder` override; else platform default | Measured comment |
 
-Hot path research (for optimizers): `GameManager.gmUpdate` → world tick → entity AI → dynamic mesh. See `7dtd-optimizer/docs/ARCHITECTURE.md`.
+Hot path research (for optimizers): `GameManager.gmUpdate` → world tick → entity AI → dynamic mesh. See `7dtd-server-optimizer/docs/ARCHITECTURE.md`.
 
 Known lag drivers (ordered, ARCHITECTURE): entity AI + pathfinding → active chunk volume / view distance → spawn walks → dynamic mesh / deco → disk saves → heavy terrain mods → single-thread main loop.
 
@@ -521,7 +521,7 @@ Before writing Harmony, exhaust stock knobs that still exist on dedicated:
 
 EfficientServer tightens **beyond** stock AI LOD / mesh budgets; it does not replace these knobs.
 
-After config + sim-side work, if APM still shows a hot main thread and sched noise, use **host topology** (CCD pin, NUMA bind, isolation, IRQ steering). That is ops, not a game mod: [`7dtd-optimizer/docs/HOST_TUNING.md`](7dtd-optimizer/docs/HOST_TUNING.md).
+After config + sim-side work, if APM still shows a hot main thread and sched noise, use **host topology** (CCD pin, NUMA bind, isolation, IRQ steering). That is ops, not a game mod: [`7dtd-server-optimizer/docs/HOST_TUNING.md`](7dtd-server-optimizer/docs/HOST_TUNING.md).
 
 ---
 
@@ -572,12 +572,12 @@ World sizes: stock RWG comment supports 6k-10k class sizes; pure PC can go large
 | Tool | Use | Where in this workspace |
 |---|---|---|
 | ILSpy / ilspycmd / dnSpyEx / monodis | Browse / decompile Managed | Host tools |
-| Mono.Cecil dump helpers | Scripted type/method dumps | `7dtd-optimizer/tools/` (Dump*.cs) |
+| Mono.Cecil dump helpers | Scripted type/method dumps | `7dtd-server-optimizer/tools/` (Dump*.cs) |
 | Harmony file logs | When patches misbehave | Game / Harmony config |
 | Telnet | Live commands without restart | Dedicated `TelnetPort` |
-| `7dtd-apm` | Host + managed evidence | Sibling project |
+| `7dtd-server-apm` | Host + managed evidence | Sibling project |
 | `7dtd-loadgen` | Repeatable MP load | Sibling project |
-| eBPF / perf | Scheduler, IO, syscalls | `7dtd-apm` collectors (not optimizer) |
+| eBPF / perf | Scheduler, IO, syscalls | `7dtd-server-apm` collectors (not optimizer) |
 | AssetStudio / UABE | Unity assets (version-sensitive) | External |
 | Wireshark | LiteNetLib traffic (protocol work) | External; loadgen territory |
 
@@ -591,7 +591,7 @@ World sizes: stock RWG comment supports 6k-10k class sizes; pure PC can go large
 3. Bisect: empty `Mods` → Harmony only → your mod → others.
 4. After Steam update: verify files, rebuild C#, retest XPath, re-expand if used.
 5. Performance claims: **same** loadgen manifest, duration, and APM preset for baseline vs candidate.
-6. Optimizations that change AI/mesh: soak combat, sleepers, quests, multi-player separation (`7dtd-optimizer/docs/FEATURES.md`).
+6. Optimizations that change AI/mesh: soak combat, sleepers, quests, multi-player separation (`7dtd-server-optimizer/docs/FEATURES.md`).
 
 ### Validation matrix (Workspace)
 
@@ -646,8 +646,8 @@ World sizes: stock RWG comment supports 6k-10k class sizes; pure PC can go large
 | Allocs / Server Tools family | Map, claims, web UI (check EAC claims **per version**) |
 | TianYi / ServerKit-style kits | Full control panels (version-pin carefully) |
 | systemd / Docker | Process supervision (your ops, not TFP); `CPUAffinity=` for CCD pin |
-| CCD / NUMA / IRQ / governor | Host topology; see [`7dtd-optimizer/docs/HOST_TUNING.md`](7dtd-optimizer/docs/HOST_TUNING.md) |
-| `7dtd-apm` + `7dtd-loadgen` | Evidence-backed capacity work in this workspace |
+| CCD / NUMA / IRQ / governor | Host topology; see [`7dtd-server-optimizer/docs/HOST_TUNING.md`](7dtd-server-optimizer/docs/HOST_TUNING.md) |
+| `7dtd-server-apm` + `7dtd-loadgen` | Evidence-backed capacity work in this workspace |
 
 ### Templates and learning
 
@@ -655,7 +655,7 @@ World sizes: stock RWG comment supports 6k-10k class sizes; pure PC can go large
 - https://github.com/7D2D/Unity-Scripts
 - Harmony intro: https://harmony.pardeike.net/articles/intro.html
 - XPath intro: https://darkaoraidenx.github.io/7DTD/introduction.html
-- Discords: Guppycur modding, 7d2d wiki, 7DaysToDieMods.com, TFP official (see `7dtd-realworld/docs/MODDING_REFERENCES.md`)
+- Discords: Guppycur modding, 7d2d wiki, 7DaysToDieMods.com, TFP official (see `7dtd-realearth/docs/MODDING_REFERENCES.md`)
 
 ---
 
@@ -748,16 +748,16 @@ Need a controlled multiplayer workload?
   → 7dtd-loadgen (EAC off)
 
 Need evidence of where time goes?
-  → 7dtd-apm host (± bridge)
+  → 7dtd-server-apm host (± bridge)
 
 Need a reviewed sim change with budgets?
-  → 7dtd-optimizer, one feature group at a time
+  → 7dtd-server-optimizer, one feature group at a time
 
 Main thread hot, multi-CCD/NUMA host, knobs already sane?
   → Host pin / isolation (HOST_TUNING.md); do not put affinity in the mod DLL
 
 Need real-world terrain product work?
-  → 7dtd-realworld (offline bake vs runtime stream)
+  → 7dtd-realearth (offline bake vs runtime stream)
 ```
 
 ### Harmony patch style
@@ -811,7 +811,7 @@ Must edit IL mid-method?
 
 ### Discords
 
-Guppycur modding, 7d2d wiki modding, 7DaysToDieMods.com, TFP official: see `7dtd-realworld/docs/MODDING_REFERENCES.md`.
+Guppycur modding, 7d2d wiki modding, 7DaysToDieMods.com, TFP official: see `7dtd-realearth/docs/MODDING_REFERENCES.md`.
 
 ---
 
@@ -829,8 +829,8 @@ Guppycur modding, 7d2d wiki modding, 7DaysToDieMods.com, TFP official: see `7dtd
 
 - **2026-07-16 (sim):** SIM_PARALLELISM description covers extract-off-main, threading policy, hot paths.
 - **2026-07-16 (oss):** Linked research notes for OSS tools survey, ServerTools, and NAIWAZI.
-- **2026-07-16 (host):** Linked [`7dtd-optimizer/docs/HOST_TUNING.md`](7dtd-optimizer/docs/HOST_TUNING.md) (CCD/NUMA/affinity measure-first ops).
-- **2026-07-16 (merge):** Folded remaining unique content from `7dtd-optimizer/docs/MODDING_BEST_PRACTICES.md` (tooling map, server-ops tools, RE tool names, Windows save path, client/dedicated DLL note). Optimizer file replaced by project-specific `DEVELOPMENT.md`.
+- **2026-07-16 (host):** Linked [`7dtd-server-optimizer/docs/HOST_TUNING.md`](7dtd-server-optimizer/docs/HOST_TUNING.md) (CCD/NUMA/affinity measure-first ops).
+- **2026-07-16 (merge):** Folded remaining unique content from `7dtd-server-optimizer/docs/MODDING_BEST_PRACTICES.md` (tooling map, server-ops tools, RE tool names, Windows save path, client/dedicated DLL note). Optimizer file replaced by project-specific `DEVELOPMENT.md`.
 - **2026-07-16 (review):** Grounded version/Unity/Harmony/paths/logs in local installs and client log; added method chooser, evidence grades, offline vs in-game TFMs, stock serverconfig property lists (kept vs Sandbox-migrated), WebMod/WebDashboard, world/prefab boundaries, Harmony tool matrix, stock-knob-before-Harmony, validation matrix, XPath `<configs>`/`set` vs `setattribute`, loadgen EAC limit.
 - **2026-07-16:** Initial workspace consolidation from optimizer draft, RealEarth packaging/height/modlet notes, APM/loadgen/optimizer boundaries, V3.0 / V3.0.1 notes, 7d2dmodding Getting Started + XPath (3.0), official XUi / Mod Interface, 7DaysToDieMods install conventions.
 
