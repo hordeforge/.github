@@ -104,7 +104,7 @@ flowchart TD
 
 ## 📚 7DTD Modding Best Practices Guide
 
-HordeForge maintains the canonical **[7 Days to Die Modding Best Practices Guide](MODDING_BEST_PRACTICES.md)** for V3.1.0+ (Henpocalypse). Key engineering rules include:
+HordeForge maintains the canonical **[7 Days to Die Modding Best Practices Guide](https://github.com/hordeforge/.github/blob/main/MODDING_BEST_PRACTICES.md)** for V3.1.0+ (Henpocalypse). Key engineering rules include:
 - **Mod Hierarchy**: Clean separation between XML XPath modlets, compiled C# Harmony DLLs, and standalone native server engines.
 - **Load Order Rules**: Alphabetical `Mods/` scanning conventions, `0_` prefixing for early-loading performance governors, and `ModInfo.xml` specifications.
 - **EAC-Off Guidelines**: Rules governing Easy Anti-Cheat enforcement (`-noeac`) for C# code mods while maintaining vanilla client join compatibility.
