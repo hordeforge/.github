@@ -47,6 +47,7 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 | **🤖 Clanker**<br>*(FPS Bots Mod)* | [`hordeforge/7dtd-fps-bots`](https://github.com/hordeforge/7dtd-fps-bots) | `HordeForge_Clanker` | `C# / TS / Python` | **Clanker FPS Bots**: Dedicated FPS combat bots with realistic movement heuristics, GA-trained neural decision brains, and Web UI. |
 | **🏰 Outpost**<br>*(Server Container)* | [`hordeforge/7dtd-server-container`](https://github.com/hordeforge/7dtd-server-container) | *(Podman Container)* | `Podman / Shell` | **HordeForge Server Container**: Production Podman container templates, staging orchestration, and systemd deployment. |
 | **📜 Codex**<br>*(Engine Research)* | [`hordeforge/7dtd-engine-research`](https://github.com/hordeforge/7dtd-engine-research) | *(Documentation)* | `Markdown / Cecil` | **7DTD Engine Research**: Reverse-engineering narratives, Mono IL decompilations, game loop maps, and wire protocol specs. |
+| **🏭 Shamway**<br>*(Asset Pipeline)* | [`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline) | *(CLI Tool)* | `Python 3.11 / C# (Unity Editor)` | **HordeForge Asset Pipeline**: Builds a mod-owned Unity AssetBundle, or synthesizes texture, audio and text bundles with no editor at all, behind offline gates for the silent failures a successful Unity build does not catch. |
 
 ---
 
@@ -75,6 +76,10 @@ flowchart TD
         REAL["hordeforge/7dtd-realearth<br><b>🌍 Pangea</b><br><i>1:1 GIS Earth Engine</i>"]
     end
 
+    subgraph ContentPipeline ["🏭 Mod Content Pipeline"]
+        SHAM["hordeforge/7dtd-asset-pipeline<br><b>🏭 Shamway</b><br><i>Gated AssetBundle Build</i>"]
+    end
+
     subgraph BotAndAutomation ["🤖 Automation & Scenario Testing"]
         PLAY["hordeforge/7dtd-playtest<br><b>🛡️ Vanguard</b><br><i>Scenario Test Runner</i>"]
         BOT["hordeforge/7dtd-fps-bots<br><b>🤖 Clanker</b><br><i>Tactical FPS Bots</i>"]
@@ -83,6 +88,7 @@ flowchart TD
 
     RES --> ZDTD
     RES --> OPT
+    RES -->|Asset URI & Bundle Rules| SHAM
 
     LOAD -->|Synthetic Protocol Clients| ZDTD
     LOAD -->|Synthetic Protocol Clients| OPT
@@ -108,7 +114,7 @@ HordeForge maintains the canonical **[7 Days to Die Modding Best Practices Guide
 - **Mod Hierarchy**: Clean separation between XML XPath modlets, compiled C# Harmony DLLs, and standalone native server engines.
 - **Load Order Rules**: Alphabetical `Mods/` scanning conventions, `0_` prefixing for early-loading performance governors, and `ModInfo.xml` specifications.
 - **EAC-Off Guidelines**: Rules governing Easy Anti-Cheat enforcement (`-noeac`) for C# code mods while maintaining vanilla client join compatibility.
-- **Asset URI Protocols**: Texture, UI atlas, audio, and AssetBundle URI formatting (`#@modfolder:...`).
+- **Asset URI Protocols**: Texture, UI atlas, audio, and AssetBundle URI formatting (`#@modfolder:...`), gated offline by 🏭 Shamway.
 - **Distribution Hygiene**: Flat zip structures (`Mods/<FolderName>/ModInfo.xml`) preventing nested directory bugs.
 
 ---
