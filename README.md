@@ -54,47 +54,54 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 
 ---
 
-## 🔄 The Evidence Loop
+## 🔄 The Evidence Loop & Architecture
 
 HordeForge projects follow a strict evidence-driven development loop:
 
-```
-                  +-----------------------------------+
-                  |      maci0/7dtd-research          |
-                  | (IL Decompilation & Wire Protocol)|
-                  +-----------------+-----------------+
-                                    |
-          +-------------------------+-------------------------+
-          |                                                   |
-          v                                                   v
-+-------------------+                               +-------------------+
-|    maci0/zdtd     |                               |maci0/7dtd-optimizer|
-| (Native Zig Dedi) |                               |(EfficientServer)  |
-+---------+---------+                               +---------+---------+
-          ^                                                   ^
-          |                                                   |
-+---------+---------+  Synthetic Protocol Clients   +---------+---------+
-| maci0/7dtd-loadgen|==============================>|maci0/7dtd-server-guard|
-|    (Screamer)     |                               |    (Landclaim)    |
-+---------+---------+                               +---------+---------+
-          ^                                                   |
-          | Benchmark Baseline & Evidence Gate                v
-+---------+---------+                               +-------------------+
-|  maci0/7dtd-apm   |                               |maci0/7dtd-realworld|
-|     (Geiger)      |                               |     (Pangea)      |
-+---------+---------+                               +---------+---------+
-          ^                                                   |
-          | Real-Client Fidelity Scores                       v
-+---------+---------+                               +-------------------+
-|maci0/7dtd-playtest|                               |maci0/7dtd-clanker |
-|    (Gauntlet)     |                               |     (Clanker)     |
-+---------+---------+                               +-------------------+
-          |
-          v Direct IP & Boot Skip
-+-------------------+
-|maci0/7dtd-connect |
-|    (Hotwire)      |
-+-------------------+
+```mermaid
+flowchart TD
+    subgraph Research ["📜 Reverse Engineering & Specs"]
+        RES["maci0/7dtd-research<br><b>📜 Codex</b><br><i>IL Decompilation & Protocol Specs</i>"]
+    end
+
+    subgraph CoreRuntimes ["🚀 Core Dedicated Server Engines"]
+        ZDTD["maci0/zdtd<br><b>⚡ BloodWire</b><br><i>Native Zig Dedi Engine</i>"]
+        OPT["maci0/7dtd-optimizer<br><b>🔥 Crucible</b><br><i>EfficientServer Governor</i>"]
+    end
+
+    subgraph LoadAndGuard ["⚡ Load Testing & Security"]
+        LOAD["maci0/7dtd-loadgen<br><b>😱 Screamer</b><br><i>100+ Bot LoadGen</i>"]
+        GUARD["maci0/7dtd-server-guard<br><b>🛡️ Landclaim</b><br><i>Behavioral Anti-Cheat</i>"]
+    end
+
+    subgraph TelemetryAndWorld ["📊 Telemetry & World Engine"]
+        APM["maci0/7dtd-apm<br><b>☣️ Geiger</b><br><i>Server APM & Profiler</i>"]
+        REAL["maci0/7dtd-realworld<br><b>🌍 Pangea</b><br><i>1:1 GIS Earth Engine</i>"]
+    end
+
+    subgraph BotAndAutomation ["🤖 Automation & Scenario Testing"]
+        PLAY["maci0/7dtd-playtest<br><b>🥊 Gauntlet</b><br><i>Scenario Test Runner</i>"]
+        BOT["maci0/7dtd-clanker<br><b>🤖 Clanker</b><br><i>Tactical FPS Bots</i>"]
+        CONN["maci0/7dtd-connect<br><b>⚡ Hotwire</b><br><i>Direct IP FastConnect</i>"]
+    end
+
+    RES --> ZDTD
+    RES --> OPT
+
+    LOAD -->|Synthetic Protocol Clients| ZDTD
+    LOAD -->|Synthetic Protocol Clients| OPT
+    LOAD -->|Protocol Validation| GUARD
+
+    APM -->|Baseline & eBPF Metrics| OPT
+    APM -->|Evidence Regression Gate| LOAD
+
+    PLAY -->|Real-Client Fidelity| ZDTD
+    PLAY -->|Real-Client Fidelity| OPT
+    PLAY -->|Direct IP Join| CONN
+
+    OPT --> GUARD
+    OPT --> REAL
+    OPT --> BOT
 ```
 
 ---
@@ -111,3 +118,11 @@ HordeForge projects follow a strict evidence-driven development loop:
 ## 🚚 Future Migration Plan
 
 All repositories listed above will be migrated from `github.com/maci0/<repo>` to `github.com/hordeforge/<repo-slug>` (e.g. `github.com/hordeforge/7dtd-server-optimizer`). Redirects will be configured on GitHub to preserve existing clone URLs and stars.
+
+---
+
+## 📄 License & Attribution
+
+All HordeForge projects are licensed under open-source software licenses (MIT or Apache-2.0).
+
+*7 Days to Die is a registered trademark of The Fun Pimps Entertainment LLC. HordeForge is an independent open-source project and is not affiliated with or endorsed by The Fun Pimps.*
