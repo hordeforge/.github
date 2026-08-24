@@ -48,6 +48,7 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 | **🏰 Outpost**<br>*(Server Container)* | [`hordeforge/7dtd-server-container`](https://github.com/hordeforge/7dtd-server-container) | *(Podman Container)* | `Podman / Shell` | **HordeForge Server Container**: Production Podman container templates, staging orchestration, and systemd deployment. |
 | **📜 Codex**<br>*(Engine Research)* | [`hordeforge/7dtd-engine-research`](https://github.com/hordeforge/7dtd-engine-research) | *(Documentation)* | `Markdown / Cecil` | **7DTD Engine Research**: Reverse-engineering narratives, Mono IL decompilations, game loop maps, and wire protocol specs. |
 | **🏭 Shamway**<br>*(Asset Pipeline)* | [`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline) | *(CLI Tool)* | `Python 3.11 / C# (Unity Editor)` | **HordeForge Asset Pipeline**: Builds a mod-owned Unity AssetBundle, or synthesizes texture, audio and text bundles with no editor at all, behind offline gates for the silent failures a successful Unity build does not catch. |
+| **🧫 Quarantine**<br>*(WasmHost)* | [`hordeforge/7dtd-wasm`](https://github.com/hordeforge/7dtd-wasm) | `1_HordeForge_WasmHost` | `C# / Rust / C / Zig` | **HordeForge Quarantine**: Embeddable WebAssembly sandbox host that runs untrusted mods (wasm32-wasip1) under fuel, memory, and module limits behind a documented ABI. |
 
 ---
 
@@ -78,6 +79,10 @@ flowchart TD
 
     subgraph ContentPipeline ["🏭 Mod Content Pipeline"]
         SHAM["hordeforge/7dtd-asset-pipeline<br><b>🏭 Shamway</b><br><i>Gated AssetBundle Build</i>"]
+    end
+
+    subgraph ModHost ["🧫 Mod Host & Sandbox"]
+        QUAR["hordeforge/7dtd-wasm<br><b>🧫 Quarantine</b><br><i>Wasm Mod Sandbox Host</i>"]
     end
 
     subgraph BotAndAutomation ["🤖 Automation & Scenario Testing"]
