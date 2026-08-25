@@ -171,6 +171,11 @@ The version has exactly one canonical home per repository (`pyproject.toml`,
 `ModInfo.xml`, a `*Version.cs` constant). Every other copy is documented as a
 mirror and checked.
 
+**The tag gate is required even where publishing is manual.** A repository
+whose artifact cannot be built on a hosted runner still runs a `release.yml`
+that does nothing but compare the tag to the manifest and fail on a mismatch.
+That check is the part that protects consumers; the upload is convenience.
+
 ## 9. Evidence
 
 The house rule that outranks style. Claims in a README, a changelog, or a
@@ -218,6 +223,29 @@ the list below was closed out:
 - ~~Several repositories have no `.scratch/` rule.~~ Added to the five that
   lacked one. `7dtd-fastconnect` had been ignoring a single scratch filename
   by hand; the glob replaces it.
+- ~~`7dtd-engine-research` is Codex in the org profile and Schematics in its
+  own README.~~ Schematics wins on evidence: seven references across the
+  workspace, including the repository's own README and the `sibling-repos.md`
+  cross-links two other repositories publish, against two in this repository
+  alone. The profile and this repository's `AGENTS.md` now say Schematics.
+- ~~Only `7dtd-asset-pipeline` has a `release.yml`.~~ Ten of fourteen now
+  have one, and every one of those gates the tag against the version the
+  repository actually ships, so a mistyped or forgotten bump is rejected
+  instead of becoming a release nobody can reproduce. `7dtd-asset-pipeline`
+  and `7dtd-vision-review` publish artifacts too (sdist, wheel, and a
+  CycloneDX SBOM from the committed lock file). The mod repositories gate the
+  tag and stop there: `make package` compiles against the dedicated server's
+  own assemblies, which a hosted runner does not have, and publishing a zip
+  CI cannot build would be a claim rather than evidence. A maintainer with a
+  game install still runs `make package` and attaches the archive.
+
+  The four without one each have a reason: `7dtd-engine-research`
+  (documentation, nothing versioned), `7dtd-server-container` (container
+  images, versioned by the base game), `7dtd-server-guard` (no build yet,
+  Phase 2), and `zdtd-server`, which already gates the tag inside `make
+  check` via `scripts/check-release.sh` and uploads its binary from
+  `ci.yml`. That last one was on this list in error.
+
 
 Still open:
 
@@ -229,11 +257,3 @@ Still open:
   `coverage` target, and `zdtd-server` uses a SonarCloud quality gate
   instead. None of them shows a stale badge, which is the rule that matters,
   but the gap is real.
-- **`7dtd-engine-research` is called Codex in the org profile and Schematics
-  in its own README.** One of the two is wrong and neither is obviously
-  newer: Codex has been in the profile since its first commit, Schematics is
-  what the repository calls itself. Pick one, then change the other.
-- **Only `7dtd-asset-pipeline` has a `release.yml`.** Everywhere else §8 is
-  followed by hand, which means the tag-versus-manifest check that is
-  supposed to fail a release does not exist. This is the largest remaining
-  gap in the suite.
