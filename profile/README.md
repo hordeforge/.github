@@ -39,6 +39,7 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 | **😱 Screamer**<br>*(LoadGen)* | [`hordeforge/7dtd-loadgen`](https://github.com/hordeforge/7dtd-loadgen) | *(CLI Tool)* | `C# (.NET 8.0)` | **HordeForge LoadGen**: Headless LiteNetLib synthetic protocol client generator for high-concurrency 100+ bot server stress testing. |
 | **🛡️ Vanguard**<br>*(Playtest Runner)* | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | *(Python Test Runner)* | `Python 3.13 / C#` | **Vanguard**: End-to-end automated scenario test suite driving stock 7DTD clients to verify server state and fidelity. |
 | **⚡ Hotwire**<br>*(FastConnect)* | [`hordeforge/7dtd-fastconnect`](https://github.com/hordeforge/7dtd-fastconnect) | `HordeForge_Hotwire` | `C#` | **HordeForge FastConnect**: Client utility for direct-IP joining, EULA/intro boot skipping, and headless client test launching. |
+| **👁️ Deadeye**<br>*(Vision Review)* | [`hordeforge/7dtd-vision-review`](https://github.com/hordeforge/7dtd-vision-review) | *(CLI Tool)* | `Python 3.11+` | **HordeForge Deadeye**: Shared vision-model review gateway that submits a clip plus the author's recorded intent to a vision-capable model and returns structured, advisory feedback for the asset pipeline and playtest suites. |
 
 ### 🛡️ Security, AI, & Infrastructure
 | Hybrid Product Name | Repository URL | Internal `Mods/` Folder | Tech Stack | Role & Description |
