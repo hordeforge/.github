@@ -94,7 +94,7 @@ Lower CPU alone is not acceptance. Same world, seed, bot count, duration, collec
 
 | Field | Value |
 |---|---|
-| Game | V **3.1.0** (b14), Henpocalypse line |
+| Game | V **3.2.0** (b9), Henpocalypse line |
 | Runtime | Unity Mono (not IL2CPP) |
 | Dedicated tick rate | **20 TPS** (50 ms budget), single-threaded main loop |
 | Client (this machine) | `~/.local/share/Steam/steamapps/common/7 Days To Die` |

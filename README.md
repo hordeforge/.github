@@ -6,7 +6,7 @@ This repository contains the community configuration, organization profile, and 
 
 - **[`profile/README.md`](profile/README.md)** — The public organization profile landing page rendered on [github.com/hordeforge](https://github.com/hordeforge).
 - **[`REPOSITORY_STANDARDS.md`](REPOSITORY_STANDARDS.md)**: The rules every HordeForge repository follows, covering required files, README shape, the Makefile contract, CI posture, and what never enters a tree.
-- **[`MODDING_BEST_PRACTICES.md`](MODDING_BEST_PRACTICES.md)** — The canonical 7 Days to Die (V3.1.0+) Modding Best Practices Guide for HordeForge developers and server administrators.
+- **[`MODDING_BEST_PRACTICES.md`](MODDING_BEST_PRACTICES.md)** — The canonical 7 Days to Die (V3.2.0+) Modding Best Practices Guide for HordeForge developers and server administrators.
 
 ---
 

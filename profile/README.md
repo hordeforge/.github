@@ -6,7 +6,7 @@
 
 **High-Performance Systems Engineering, Engine Infrastructure, & Zero-Overhead Tooling for 7 Days to Die**
 
-[![Target Game](https://img.shields.io/badge/7_Days_to_Die-V3.1.0_(b14)-red.svg)](https://7daystodie.com/)
+[![Target Game](https://img.shields.io/badge/7_Days_to_Die-V3.2.0_(b9)-red.svg)](https://7daystodie.com/)
 [![Runtime](https://img.shields.io/badge/Runtime-Unity_Mono_%7C_Native_Zig-blue.svg)](https://ziglang.org/)
 [![Target Tickrate](https://img.shields.io/badge/Server_Target-20_TPS_(50ms_budget)-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/License-MIT_%7C_Apache_2.0-orange.svg)]()
@@ -116,7 +116,7 @@ flowchart TD
 
 ## 📚 7DTD Modding Best Practices Guide
 
-HordeForge maintains the canonical **[7 Days to Die Modding Best Practices Guide](https://github.com/hordeforge/.github/blob/main/MODDING_BEST_PRACTICES.md)** for V3.1.0+ (Henpocalypse). Key engineering rules include:
+HordeForge maintains the canonical **[7 Days to Die Modding Best Practices Guide](https://github.com/hordeforge/.github/blob/main/MODDING_BEST_PRACTICES.md)** for V3.2.0+ (Henpocalypse). Key engineering rules include:
 - **Mod Hierarchy**: Clean separation between XML XPath modlets, compiled C# Harmony DLLs, and standalone native server engines.
 - **Load Order Rules**: Alphabetical `Mods/` scanning conventions, `0_` prefixing for early-loading performance governors, and `ModInfo.xml` specifications.
 - **EAC-Off Guidelines**: Rules governing Easy Anti-Cheat enforcement (`-noeac`) for C# code mods while maintaining vanilla client join compatibility.

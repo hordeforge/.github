@@ -1,8 +1,8 @@
 # 7 Days to Die modding: consolidated best practices
 
-**Target game:** V **3.1.0** (b14) Stable, Henpocalypse line  
+**Target game:** V **3.2.0** (b9) Stable, Henpocalypse line  
 **Engine (this machine):** Unity **2022.3.62f2**, **Mono** (not IL2CPP), WindowsPlayer under Proton for client; dedicated is Linux/x86_64 headless  
-**Last validated:** 2026-08-02 against official V3.1.0 Henpocalypse + local V3.1.0 (b14) dedicated, [7d2dmodding.wiki.gg](https://7d2dmodding.wiki.gg/) (pages marked verified for 3.0), official [Mod Interface](https://7daystodie.wiki.gg/wiki/Mod_Interface) / [XUi](https://7daystodie.wiki.gg/wiki/XUi), [7DaysToDieMods.com](https://7daystodiemods.com/) install guidance, **local Steam installs + client log**, and the projects in this workspace.
+**Last validated:** 2026-08-28 against official V3.2.0 (b9) + local V3.2.0 (b9) dedicated, [7d2dmodding.wiki.gg](https://7d2dmodding.wiki.gg/) (pages marked verified for 3.0), official [Mod Interface](https://7daystodie.wiki.gg/wiki/Mod_Interface) / [XUi](https://7daystodie.wiki.gg/wiki/XUi), [7DaysToDieMods.com](https://7daystodiemods.com/) install guidance, **local Steam installs + client log**, and the projects in this workspace.
 
 This is the **workspace root** canonical guide. Project-specific docs stay for deep detail; this file owns **what to do where**, **which method to use when**, and **how to validate** after game updates.
 
@@ -41,7 +41,7 @@ This is the **workspace root** canonical guide. Project-specific docs stay for d
 
 | Field | Value | Grade |
 |---|---|---|
-| Client log version | `Version: V 3.1.0 (b14) Compatibility Version: V 3.1.0` | Measured (Constants.cVersion* + Steam build 2026-08-02) |
+| Client log version | `Version: V 3.2.0 (b9) Compatibility Version: V 3.2.0` | Measured (Constants.cVersion* + Steam build 2026-08-28) |
 | Unity | `2022.3.62f2` | Measured (`UnityPlayer.so` strings) + ARCHITECTURE |
 | Runtime | Mono / MonoBleedingEdge | Measured (log: Mono path + Manager ReloadAssembly) |
 | Stock Harmony | `Mods/0_TFP_Harmony`, `Name=TFP_Harmony`, **Version 1.1.0.4**, `SkipWithAntiCheat=true` | Measured |
@@ -787,6 +787,7 @@ Must edit IL mid-method?
 | Resource | URL |
 |---|---|
 | V3.0 release notes (modding section) | https://7daystodie.com/v3-0-dead-hot-summer-release-notes/ |
+| V3.2.0 (b9) | Steam 2026-08-28; exact-diff: `7dtd-engine-research/docs/changelog-3.2.0.md` |
 | V3.1.0 Henpocalypse | https://7daystodie.com/v3-1-0-henpocalypse-release-notes/ |
 | V3.0.1 Stable | https://7daystodie.com/v3-0-1-stable-release/ |
 | Mod Interface | https://7daystodie.wiki.gg/wiki/Mod_Interface |
@@ -836,4 +837,5 @@ Guppycur modding, 7d2d wiki modding, 7DaysToDieMods.com, TFP official: see `7dtd
 - **2026-07-16 (review):** Grounded version/Unity/Harmony/paths/logs in local installs and client log; added method chooser, evidence grades, offline vs in-game TFMs, stock serverconfig property lists (kept vs Sandbox-migrated), WebMod/WebDashboard, world/prefab boundaries, Harmony tool matrix, stock-knob-before-Harmony, validation matrix, XPath `<configs>`/`set` vs `setattribute`, loadgen EAC limit.
 - **2026-07-16:** Initial workspace consolidation from optimizer draft, RealEarth packaging/height/modlet notes, APM/loadgen/optimizer boundaries, V3.0 / V3.0.1 notes, 7d2dmodding Getting Started + XPath (3.0), official XUi / Mod Interface, 7DaysToDieMods install conventions.
 
+- **2026-08-28:** Retarget workspace modding guide to V3.2.0 (b9); wire + held-entity notes carried from V3.1.0, exact-diff changelog in `7dtd-engine-research`.
 - **2026-08-02:** Retarget workspace modding guide to V3.1.0 (b14) Henpocalypse; TE wire + held-entity notes.
