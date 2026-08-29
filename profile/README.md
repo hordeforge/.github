@@ -51,6 +51,12 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 | **🏭 Shamway**<br>*(Asset Pipeline)* | [`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline) | *(CLI Tool)* | `Python 3.11 / C# (Unity Editor)` | **HordeForge Asset Pipeline**: Builds a mod-owned Unity AssetBundle, or synthesizes texture, audio and text bundles with no editor at all, behind offline gates for the silent failures a successful Unity build does not catch. |
 | **🧫 Quarantine**<br>*(WasmHost)* | [`hordeforge/7dtd-wasm`](https://github.com/hordeforge/7dtd-wasm) | `1_HordeForge_WasmHost` | `C# / Rust / C / Zig` | **HordeForge Quarantine**: Embeddable WebAssembly sandbox host that runs untrusted mods (wasm32-wasip1) under fuel, memory, and module limits behind a documented ABI. |
 
+### 🧰 Modding Toolkit
+| Hybrid Product Name | Repository URL | Internal `Mods/` Folder | Tech Stack | Role & Description |
+|---|---|---|---|---|
+| **🔨 Anvil**<br>*(Mod Template)* | [`hordeforge/7dtd-mod-template`](https://github.com/hordeforge/7dtd-mod-template) | *(Scaffold)* | `Shell / Python / C#` | **HordeForge Anvil**: One-command scaffold for new 7DTD mods — modlet layout, net48 Harmony project, hot-reloading TOML settings component, offline test gates, and the working discipline baked into every generated repo. |
+| **🔧 Wrench**<br>*(Mod Settings)* | [`hordeforge/7dtd-mod-settings`](https://github.com/hordeforge/7dtd-mod-settings) | `Wrench` | `C# (.NET 4.8)` | **HordeForge Wrench**: In-game Mod Settings screen in the options menu — lists every installed mod shipping a `Config/<Mod>.toml`, edits values in place (comments and layout survive byte-for-byte), and reports live hot-reload by the target mod. No registration API: the TOML file is the whole integration surface. |
+
 ---
 
 ## 🔄 The Evidence Loop & Architecture
