@@ -49,6 +49,7 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 | **🏰 Outpost**<br>*(Server Container)* | [`hordeforge/7dtd-server-container`](https://github.com/hordeforge/7dtd-server-container) | *(Podman Container)* | `Podman / Shell` | **HordeForge Server Container**: Production Podman container templates, staging orchestration, and systemd deployment. |
 | **📜 Schematics**<br>*(Engine Research)* | [`hordeforge/7dtd-engine-research`](https://github.com/hordeforge/7dtd-engine-research) | *(Documentation)* | `Markdown / Cecil` | **7DTD Engine Research**: Reverse-engineering narratives, Mono IL decompilations, game loop maps, and wire protocol specs. |
 | **🏭 Shamway**<br>*(Asset Pipeline)* | [`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline) | *(CLI Tool)* | `Python 3.11 / C# (Unity Editor)` | **HordeForge Asset Pipeline**: Builds a mod-owned Unity AssetBundle, or synthesizes texture, audio and text bundles with no editor at all, behind offline gates for the silent failures a successful Unity build does not catch. |
+| **🔨 Anvil**<br>*(Mod Template)* | [`hordeforge/7dtd-mod-template`](https://github.com/hordeforge/7dtd-mod-template) | *(Template)* | `Shell / Python / C# (.NET 4.8)` | **HordeForge Mod Template**: Scaffold for new 7DTD mods — modlet skeleton, offline gates, install-dependent validators, and the agent working discipline preinstalled; one config-driven run provisions tool checkouts, machine paths, and seeded docs. |
 | **🧫 Quarantine**<br>*(WasmHost)* | [`hordeforge/7dtd-wasm`](https://github.com/hordeforge/7dtd-wasm) | `1_HordeForge_WasmHost` | `C# / Rust / C / Zig` | **HordeForge Quarantine**: Embeddable WebAssembly sandbox host that runs untrusted mods (wasm32-wasip1) under fuel, memory, and module limits behind a documented ABI. |
 
 ---
@@ -80,6 +81,7 @@ flowchart TD
 
     subgraph ContentPipeline ["🏭 Mod Content Pipeline"]
         SHAM["hordeforge/7dtd-asset-pipeline<br><b>🏭 Shamway</b><br><i>Gated AssetBundle Build</i>"]
+        ANVIL["hordeforge/7dtd-mod-template<br><b>🔨 Anvil</b><br><i>Mod Template & Scaffolder</i>"]
     end
 
     subgraph ModHost ["🧫 Mod Host & Sandbox"]
@@ -95,6 +97,8 @@ flowchart TD
     RES --> ZDTD
     RES --> OPT
     RES -->|Asset URI & Bundle Rules| SHAM
+    ANVIL -->|Scaffolds Mods For| SHAM
+    ANVIL -->|Scaffolds Mods For| PLAY
 
     LOAD -->|Synthetic Protocol Clients| ZDTD
     LOAD -->|Synthetic Protocol Clients| OPT
