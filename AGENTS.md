@@ -43,6 +43,7 @@ make graphify-wiki     # re-export wiki from existing graph.json
 | **⚡ Hotwire** *(FastConnect)* | `7dtd-fastconnect/` | [`hordeforge/7dtd-fastconnect`](https://github.com/hordeforge/7dtd-fastconnect) | Client join-by-IP / auto-join / boot skip helper (no gameplay) | [`7dtd-fastconnect/AGENTS.md`](7dtd-fastconnect/AGENTS.md) |
 | **🛡️ Vanguard** *(Playtest Runner)* | `7dtd-playtest/` | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | Stock-client scenario suite (drive + assert; scores real play) | [`7dtd-playtest/AGENTS.md`](7dtd-playtest/AGENTS.md) |
 | **🏰 Outpost** *(Server Container)* | `7dtd-server-container/` | [`hordeforge/7dtd-server-container`](https://github.com/hordeforge/7dtd-server-container) | LAN dedicated server deployment (Podman container; Navezgane + mods) | [`7dtd-server-container/AGENTS.md`](7dtd-server-container/AGENTS.md) |
+| **🏠 Safehouse** *(Lab Isolation)* | `7dtd-safehouse/` | [`hordeforge/7dtd-sandbox`](https://github.com/hordeforge/7dtd-sandbox) | Fresh Steam-free client/dedi instances for harnesses | [`7dtd-safehouse/AGENTS.md`](7dtd-safehouse/AGENTS.md) |
 | **📜 Schematics** *(Engine Research)* | `7dtd-engine-research/` | [`hordeforge/7dtd-engine-research`](https://github.com/hordeforge/7dtd-engine-research) | Dedicated engine RE narratives (loop, AI, net, save, terrain APIs, Cecil dumps) | [`7dtd-engine-research/AGENTS.md`](7dtd-engine-research/AGENTS.md) |
 | **🏭 Shamway** *(Asset Pipeline)* | `7dtd-asset-pipeline/` | [`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline) | Mod-owned AssetBundle build, editorless bundle synthesis, and the offline gates for silent asset failures | [`7dtd-asset-pipeline/AGENTS.md`](7dtd-asset-pipeline/AGENTS.md) |
 
@@ -60,6 +61,7 @@ BloodWire (zdtd)     → optional Zig dedi (client-wire rewrite; not a mod host)
 Hotwire (connect)    → client join-by-IP / boot skip only
 Vanguard (playtest)  → stock-client gameplay scenarios + host scorer (not a server fix)
 Shamway (assets)     → builds and gates a mod's own AssetBundle (client content, not a server path)
+Safehouse (lab)      → isolates stock client/dedi instances for harnesses (not wasm)
 ```
 
 - Projects are **independent git trees**. None silently installs or rewrites another.
@@ -130,6 +132,7 @@ Any C# code mod forces the server EAC-off (`-noeac`); only XML-only mods run und
 | Join N bots / soak dedicated | `7dtd-loadgen` |
 | Stock client join-by-IP / auto-join | `7dtd-fastconnect` |
 | Automated real-client play suites | `7dtd-playtest` |
+| Lab client/dedi instance isolation | `7dtd-safehouse` (Safehouse; repo `7dtd-sandbox`) |
 | Capture, compare, budget, export | `7dtd-server-apm` |
 | Reviewed AI LOD / mesh / dedicated skips | `7dtd-server-optimizer` |
 | Server-side anti-cheat evidence / impossible-action rejection | `7dtd-server-guard` |

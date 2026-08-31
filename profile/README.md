@@ -39,6 +39,7 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 | **😱 Screamer**<br>*(LoadGen)* | [`hordeforge/7dtd-loadgen`](https://github.com/hordeforge/7dtd-loadgen) | *(CLI Tool)* | `C# (.NET 8.0)` | **HordeForge LoadGen**: Headless LiteNetLib synthetic protocol client generator for high-concurrency 100+ bot server stress testing. |
 | **🛡️ Vanguard**<br>*(Playtest Runner)* | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | *(Python Test Runner)* | `Python 3.13 / C#` | **Vanguard**: End-to-end automated scenario test suite driving stock 7DTD clients to verify server state and fidelity. |
 | **⚡ Hotwire**<br>*(FastConnect)* | [`hordeforge/7dtd-fastconnect`](https://github.com/hordeforge/7dtd-fastconnect) | `HordeForge_Hotwire` | `C#` | **HordeForge FastConnect**: Client utility for direct-IP joining, EULA/intro boot skipping, and headless client test launching. |
+| **🏠 Safehouse**<br>*(Lab Isolation)* | [`hordeforge/7dtd-sandbox`](https://github.com/hordeforge/7dtd-sandbox) | *(CLI / Docker)* | `Shell / Docker` | **Safehouse**: Steam-free client and dedicated-server instance isolation for harnesses (`sb` lifecycle CLI; local folder `7dtd-safehouse`). |
 | **👁️ Deadeye**<br>*(Vision Review)* | [`hordeforge/7dtd-vision-review`](https://github.com/hordeforge/7dtd-vision-review) | *(CLI Tool)* | `Python 3.11+` | **HordeForge Deadeye**: Shared vision-model review gateway that submits a clip plus the author's recorded intent to a vision-capable model and returns structured, advisory feedback for the asset pipeline and playtest suites. |
 
 ### 🛡️ Security, AI, & Infrastructure
@@ -96,6 +97,7 @@ flowchart TD
         PLAY["hordeforge/7dtd-playtest<br><b>🛡️ Vanguard</b><br><i>Scenario Test Runner</i>"]
         BOT["hordeforge/7dtd-fps-bots<br><b>🤖 Clanker</b><br><i>Tactical FPS Bots</i>"]
         CONN["hordeforge/7dtd-fastconnect<br><b>⚡ Hotwire</b><br><i>Direct IP FastConnect</i>"]
+        SAFE["hordeforge/7dtd-sandbox<br><b>🏠 Safehouse</b><br><i>Lab Instance Isolation</i>"]
     end
 
     RES --> ZDTD
@@ -112,6 +114,7 @@ flowchart TD
     PLAY -->|Real-Client Fidelity| ZDTD
     PLAY -->|Real-Client Fidelity| OPT
     PLAY -->|Direct IP Join| CONN
+    PLAY -->|Lab Isolation| SAFE
 
     OPT --> GUARD
     OPT --> REAL
