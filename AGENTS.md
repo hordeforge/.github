@@ -43,7 +43,7 @@ make graphify-wiki     # re-export wiki from existing graph.json
 | **⚡ Hotwire** *(FastConnect)* | `7dtd-fastconnect/` | [`hordeforge/7dtd-fastconnect`](https://github.com/hordeforge/7dtd-fastconnect) | Client join-by-IP / auto-join / boot skip helper (no gameplay) | [`7dtd-fastconnect/AGENTS.md`](7dtd-fastconnect/AGENTS.md) |
 | **🛡️ Vanguard** *(Playtest Runner)* | `7dtd-playtest/` | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | Stock-client scenario suite (drive + assert; scores real play) | [`7dtd-playtest/AGENTS.md`](7dtd-playtest/AGENTS.md) |
 | **🏰 Outpost** *(Server Container)* | `7dtd-server-container/` | [`hordeforge/7dtd-server-container`](https://github.com/hordeforge/7dtd-server-container) | LAN dedicated server deployment (Podman container; Navezgane + mods) | [`7dtd-server-container/AGENTS.md`](7dtd-server-container/AGENTS.md) |
-| **🏠 Safehouse** *(Lab Isolation)* | `7dtd-safehouse/` | [`hordeforge/7dtd-sandbox`](https://github.com/hordeforge/7dtd-sandbox) | Fresh Steam-free client/dedi instances for harnesses | [`7dtd-safehouse/AGENTS.md`](7dtd-safehouse/AGENTS.md) |
+| **🏠 Safehouse** *(Lab Isolation)* | `7dtd-sandbox/` | [`hordeforge/7dtd-sandbox`](https://github.com/hordeforge/7dtd-sandbox) | Fresh Steam-free client/dedi instances for harnesses | [`7dtd-sandbox/AGENTS.md`](7dtd-sandbox/AGENTS.md) |
 | **📜 Schematics** *(Engine Research)* | `7dtd-engine-research/` | [`hordeforge/7dtd-engine-research`](https://github.com/hordeforge/7dtd-engine-research) | Dedicated engine RE narratives (loop, AI, net, save, terrain APIs, Cecil dumps) | [`7dtd-engine-research/AGENTS.md`](7dtd-engine-research/AGENTS.md) |
 | **🏭 Shamway** *(Asset Pipeline)* | `7dtd-asset-pipeline/` | [`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline) | Mod-owned AssetBundle build, editorless bundle synthesis, and the offline gates for silent asset failures | [`7dtd-asset-pipeline/AGENTS.md`](7dtd-asset-pipeline/AGENTS.md) |
 
@@ -63,6 +63,36 @@ Vanguard (playtest)  → stock-client gameplay scenarios + host scorer (not a se
 Shamway (assets)     → builds and gates a mod's own AssetBundle (client content, not a server path)
 Safehouse (lab)      → isolates stock client/dedi instances for harnesses (not wasm)
 ```
+
+### Testing tiers
+
+See [ADR 0001](docs/adr/0001-test-tiers-and-declarative-suites.md).
+
+| Tier | Owns | Must not |
+|---|---|---|
+| **Safehouse** (`7dtd-sandbox`) | Game bases, instance isolation, ports, serverconfig and `serveradmin.xml` rendering (`scripts/sbconfig.py`), mod staging, bring-up and teardown (`sb up` / `stop`) | Suites, scoring, mod scenarios |
+| **Playtest** (`7dtd-playtest`) | The orchestrator, stock-fidelity suites (`suites/*.json`), the stock Catalog and the client mod | Isolation, config rendering, port allocation, exec'ing a dedicated, production deploy, mod-local cases |
+| **Mod repos** | Their own `IScenarioProvider` and their own suite JSON beside it | Stock-fidelity suites; a second orchestrator wrapper |
+
+Two axes, not five targets: `--provision managed|attach` (who owns the server
+process) and `--server stock|zdtd` (which server is under test), plus an
+attach-only `--readonly` for a host playtest must never write to. A managed
+stock run is always a Safehouse instance; nothing starts a dedicated inside
+the Steam install.
+
+Rules that follow from the tiers:
+
+- **One serverconfig renderer**: `7dtd-sandbox/scripts/sbconfig.py`. Lab
+  scripts call it through `sb render-config` or `SANDBOX_ROOT`. Only
+  `7dtd-server-container` keeps its own (production boot, different template).
+- **Stop by instance, never by pattern.** `sb stop <name>` matches that
+  instance's own `SB_INSTANCE`; a blanket `pkill 7DaysToDieServer` kills every
+  other sandbox instance on the machine, including another agent's run.
+- **A declared case ref must resolve.** `suites/*.json` refs are checked
+  against `Catalog.cs` offline, and the client runs only declared refs, so a
+  case nobody declared does not silently ride along.
+- Stock-fidelity suites live in `7dtd-playtest` only. A mod suite may not
+  claim a built-in suite id.
 
 - Projects are **independent git trees**. None silently installs or rewrites another.
 - **Measure and optimize live in different DLLs** (`HordeForge_Geiger` bridge vs `0_HordeForge_Crucible`) for **stock** dedi.
@@ -132,7 +162,7 @@ Any C# code mod forces the server EAC-off (`-noeac`); only XML-only mods run und
 | Join N bots / soak dedicated | `7dtd-loadgen` |
 | Stock client join-by-IP / auto-join | `7dtd-fastconnect` |
 | Automated real-client play suites | `7dtd-playtest` |
-| Lab client/dedi instance isolation | `7dtd-safehouse` (Safehouse; repo `7dtd-sandbox`) |
+| Lab client/dedi instance isolation | `7dtd-sandbox` (Safehouse; remote `7dtd-sandbox`) |
 | Capture, compare, budget, export | `7dtd-server-apm` |
 | Reviewed AI LOD / mesh / dedicated skips | `7dtd-server-optimizer` |
 | Server-side anti-cheat evidence / impossible-action rejection | `7dtd-server-guard` |
