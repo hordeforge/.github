@@ -37,9 +37,9 @@ Our suite spans low-level Mono/IL reverse engineering, a zero-allocation native 
 |---|---|---|---|---|
 | **☣️ Geiger**<br>*(Server APM)* | [`hordeforge/7dtd-server-apm`](https://github.com/hordeforge/7dtd-server-apm) | `HordeForge_Geiger` | `C# / Python / SQLite` | **HordeForge Server APM**: Performance monitoring, eBPF kernel profiling, eGC freeze detection, and automated regression gating (`EfficientTelemetry`). |
 | **😱 Screamer**<br>*(LoadGen)* | [`hordeforge/7dtd-loadgen`](https://github.com/hordeforge/7dtd-loadgen) | *(CLI Tool)* | `C# (.NET 8.0)` | **HordeForge LoadGen**: Headless LiteNetLib synthetic protocol client generator for high-concurrency 100+ bot server stress testing. |
-| **🛡️ Vanguard**<br>*(Playtest Runner)* | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | *(Python Test Runner)* | `Python 3.13 / C#` | **Vanguard**: End-to-end automated scenario test suite driving stock 7DTD clients to verify server state and fidelity. |
+| **🛡️ Vanguard**<br>*(Playtest Runner)* | [`hordeforge/7dtd-playtest`](https://github.com/hordeforge/7dtd-playtest) | *(Python Test Runner)* | `Python 3.13 / C#` | **Vanguard**: End-to-end automated scenario test suite driving stock 7DTD clients to verify server state and fidelity. Suites are declarative JSON (what runs, where, which world, which mods); the C# catalog owns how each case drives and asserts. |
 | **⚡ Hotwire**<br>*(FastConnect)* | [`hordeforge/7dtd-fastconnect`](https://github.com/hordeforge/7dtd-fastconnect) | `HordeForge_Hotwire` | `C#` | **HordeForge FastConnect**: Client utility for direct-IP joining, EULA/intro boot skipping, and headless client test launching. |
-| **🏠 Safehouse**<br>*(Lab Isolation)* | [`hordeforge/7dtd-sandbox`](https://github.com/hordeforge/7dtd-sandbox) | *(CLI / Docker)* | `Shell / Docker` | **Safehouse**: Steam-free client and dedicated-server instance isolation for harnesses (`sb` lifecycle CLI; local folder `7dtd-safehouse`). |
+| **🏠 Safehouse**<br>*(Lab Isolation)* | [`hordeforge/7dtd-sandbox`](https://github.com/hordeforge/7dtd-sandbox) | *(CLI / Docker)* | `Shell / Python` | **Safehouse**: Steam-free client and dedicated-server instance isolation for every harness. The `sb` CLI owns the game bases, per-instance game trees and port blocks, serverconfig and admin rendering, mod staging, bring-up and teardown. Nothing above it execs a dedicated server. |
 | **👁️ Deadeye**<br>*(Vision Review)* | [`hordeforge/7dtd-vision-review`](https://github.com/hordeforge/7dtd-vision-review) | *(CLI Tool)* | `Python 3.11+` | **HordeForge Deadeye**: Shared vision-model review gateway that submits a clip plus the author's recorded intent to a vision-capable model and returns structured, advisory feedback for the asset pipeline and playtest suites. |
 
 ### 🛡️ Security, AI, & Infrastructure
@@ -114,7 +114,7 @@ flowchart TD
     PLAY -->|Real-Client Fidelity| ZDTD
     PLAY -->|Real-Client Fidelity| OPT
     PLAY -->|Direct IP Join| CONN
-    PLAY -->|Lab Isolation| SAFE
+    SAFE -->|Isolated Instance, Ports, Config| PLAY
 
     OPT --> GUARD
     OPT --> REAL
@@ -131,6 +131,25 @@ HordeForge maintains the canonical **[7 Days to Die Modding Best Practices Guide
 - **EAC-Off Guidelines**: Rules governing Easy Anti-Cheat enforcement (`-noeac`) for C# code mods while maintaining vanilla client join compatibility.
 - **Asset URI Protocols**: Texture, UI atlas, audio, and AssetBundle URI formatting (`#@modfolder:...`), gated offline by 🏭 Shamway.
 - **Distribution Hygiene**: Flat zip structures (`Mods/<FolderName>/ModInfo.xml`) preventing nested directory bugs.
+
+---
+
+## 🧪 How Testing Is Layered
+
+Four tiers, one direction of dependency ([ADR 0001](https://github.com/hordeforge/.github/blob/main/docs/adr/0001-test-tiers-and-declarative-suites.md)):
+
+| Tier | Repository | Owns |
+|---|---|---|
+| Provision + environment | 🏠 **Safehouse** | Steam-free game bases, one isolated game tree and port block per instance, serverconfig and `serveradmin.xml` rendering, mod staging, bring-up and teardown |
+| Harness | 🛡️ **Vanguard** | Driving a real client, asserting observable state, scoring the run |
+| Cases | Vanguard (stock fidelity) and each mod repository (its own) | Declarative suite JSON plus the `IScenarioProvider` the refs point at |
+| Production | 🏰 **Outpost** | LAN deployment. Playtest reaches it attach-only and read-only, and never deploys, stages or restarts it |
+
+A run picks two axes rather than one fused target: who owns the server process
+(`managed` on a Safehouse instance, or `attach` to one already running) and
+which server is under test (stock dedicated or BloodWire). A suite declares the
+world it needs as serverconfig properties, so an A/B of one setting is two
+suite files differing by one line.
 
 ---
 
