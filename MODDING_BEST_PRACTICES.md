@@ -135,14 +135,37 @@ Prefer the **shallowest** layer that solves the problem. Depth costs update frag
 
 ## 3. Workspace project boundaries (what goes where)
 
-These four projects are independent. None silently installs or mutates another. (Workspace README + each project README.)
+Sibling projects are independent git trees. None silently installs or mutates another. Prefer each project's `AGENTS.md` for Owns / Does not own detail. (Workspace README + each project README.)
+
+### Testing ownership (three tiers)
+
+| Tier | Project | Owns | Must not |
+|---|---|---|---|
+| **Isolation** | `7dtd-sandbox` (Safehouse; remote `7dtd-sandbox`) | Fresh Steam-free client/dedi instances and `sb` lifecycle (`create`, `launch`, `stop`, `wipe`, `destroy`) | Gameplay suites, scoring, mod scenario logic |
+| **Harness** | `7dtd-playtest` (Vanguard) | Host orchestrator, provisioning adapters, declarative JSON suites (`suites/*.json`), stock Catalog cases (`smoke`, `core`) | Lab isolation, config rendering, port allocation, exec'ing a dedicated, production deploy, mod-local cases |
+| **Mod-local** | Each mod repo | Mod-specific scenarios via local `IScenarioProvider` implementations | Stock-fidelity suites that belong in playtest; sandbox lifecycle |
+
+A run picks two axes, not one fused target: `--provision managed|attach` (who owns the server process; managed is always a Safehouse instance) and `--server stock|zdtd` (which server is under test), plus an attach-only `--readonly` for a production host. Folder is `7dtd-sandbox/`; product name is Safehouse. Stock-fidelity suite files stay under playtest; a mod repo keeps its own suite JSON beside its own provider and runs it with `--suite-file`.
+
+### Full project roster
 
 | Project | Responsibility | Must not | Typical install surface |
 |---|---|---|---|
-| **`7dtd-loadgen`** | Controlled LiteNetLib clients, dedicated start helpers, workload manifests | Measure or optimize the server; ship game-balance content | **No** game `Mods/` entry; external `net8` process |
-| **`7dtd-server-apm`** | Host + optional bridge **measurement**, compare, budget, export | Apply performance “fixes”; embed loadgen protocol; auto-edit EfficientServer | Host: Python/`uv`. Optional: `Mods/7dtd-server-apm-bridge/` |
-| **`7dtd-server-optimizer`** (EfficientServer) | **Reviewed** Harmony optimizations only (AI LOD, dedicated skips, mesh budgets, pathfinding graph throttle) | Ship profiler UI; generate load; invent patches without APM evidence | `Mods/EfficientServer/` (dedicated) |
-| **`7dtd-realearth`** (RealEarth) | Real-world terrain packs, streaming, real-height inject, world bake | Become a general optimizer or APM tool | `Mods/RealEarth/` + engine expand tools; offline Python under `tools/` |
+| **`7dtd-sandbox`** (Safehouse) | Steam-free client/dedi instance isolation + `sb` CLI | Own playtest suites or scoring | External tool; no game `Mods/` entry |
+| **`7dtd-playtest`** (Vanguard) | Stock-client scenario harness, JSON suites, Catalog plumbing | Isolate instances; host production; own mod-local cases | `Mods/7dtd-playtest/` + host Python/`uv` |
+| **`7dtd-server-container`** (Outpost) | LAN dedicated Podman deploy, config template, mod staging | Measurement, RE, playtest scoring, sandbox CLI | Container image only |
+| **`7dtd-loadgen`** (Screamer) | Controlled LiteNetLib clients, dedicated start helpers, workload manifests | Measure or optimize the server; ship game-balance content; act as playtest oracle | **No** game `Mods/` entry; external `net8` process |
+| **`7dtd-server-apm`** (Geiger) | Host + optional bridge **measurement**, compare, budget, export | Apply performance "fixes"; embed loadgen protocol; auto-edit EfficientServer | Host: Python/`uv`. Optional: `Mods/7dtd-server-apm-bridge/` |
+| **`7dtd-server-optimizer`** (Crucible / EfficientServer) | **Reviewed** Harmony optimizations only (AI LOD, dedicated skips, mesh budgets, pathfinding graph throttle) | Ship profiler UI; generate load; invent patches without APM evidence | `Mods/EfficientServer/` (dedicated) |
+| **`7dtd-realearth`** (Pangea / RealEarth) | Real-world terrain packs, streaming, real-height inject, world bake | Become a general optimizer or APM tool | `Mods/RealEarth/` + engine expand tools; offline Python under `tools/` |
+| **`7dtd-fastconnect`** (Hotwire) | Client join-by-IP / auto-join / boot skip helper | Gameplay automation or server fixes | Client `Mods/` helper only |
+| **`7dtd-wasm`** (Quarantine) | Embeddable Wasm sandbox host (fuel, memory, ABI caps) | Filesystem lab isolation (that is Safehouse); game objects | Host library / embed surface |
+| **`7dtd-fps-bots`** (Clanker) | Server-side FPS combat bots + neural brains | Loadgen demand bots; playtest stock suites | `Mods/` dedicated (EAC off) |
+| **`7dtd-server-guard`** (Landclaim) | Server-side behavioral validation, inventory conservation, anti-cheat evidence | Client scanners; automatic permanent bans by default | `Mods/` dedicated |
+| **`7dtd-engine-research`** (Schematics) | Stock dedicated RE narratives + Cecil dump tooling | Shipping optim patches or product mods | Docs + offline tools only |
+| **`7dtd-asset-pipeline`** (Shamway) | Editable Unity assets → validated `Resources/*.unity3d` + offline gates | Runtime game server; playtest harness | Offline Python/`uv` + consumer modlet layout |
+| **`7dtd-vision-review`** (deadeye) | Vision-model clip review gateway (advisory evidence) | Acceptance sign-off; owning clips/intent | External CLI / MCP |
+| **`zdtd-server`** (BloodWire) | Native Zig dedicated rewrite (client wire) | Mod host; stock APM Mono bridge target | Standalone binary |
 
 ### Offline tooling vs in-game mod (Workspace)
 
@@ -169,10 +192,22 @@ RealEarth can be the world under test; it is not required by the other three.
 
 | You want to… | Put it in |
 |---|---|
+| Isolate a Steam-free client/dedi instance for a harness | `7dtd-sandbox` (Safehouse; `sb` CLI) |
+| Run stock-client gameplay suites (drive + assert) | `7dtd-playtest` (`suites/*.json` + Catalog) |
+| Add mod-specific playtest cases | Owning mod via `IScenarioProvider` (not playtest stock suites) |
+| Deploy a LAN dedicated container | `7dtd-server-container` |
 | Join N simulated clients and wander/die/respawn | `7dtd-loadgen` |
 | Capture CPU, GC, threads, managed timings | `7dtd-server-apm` (+ optional bridge DLL) |
 | Tighten distant AI / skip dedicated-only work / bound mesh | `7dtd-server-optimizer` after evidence |
 | Build Earth tiles, stream terrain, expand YDim | `7dtd-realearth` |
+| Client join-by-IP / intro skip only | `7dtd-fastconnect` |
+| Sandbox-host untrusted wasm mods | `7dtd-wasm` (Quarantine; not Safehouse) |
+| Server-side FPS combat bots | `7dtd-fps-bots` |
+| Server-side anti-cheat / behavioral validation | `7dtd-server-guard` |
+| Stock dedicated RE narratives and Cecil dumps | `7dtd-engine-research` |
+| Editable Unity assets → validated Resources | `7dtd-asset-pipeline` |
+| Vision-model clip review gateway | `7dtd-vision-review` |
+| Native Zig dedicated rewrite (client wire) | `zdtd-server` |
 | Change zombie HP / loot tables / recipes | XML modlet (own or separate), not optimizer |
 | Automate admin without blocking crossplay | Telnet / WebAPI (layer 0), not Harmony |
 | Add a HUD globe for RealEarth | RealEarth XUi + assets, not EfficientServer |
