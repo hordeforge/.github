@@ -1,0 +1,69 @@
+/* HordeForge design tokens: the one palette every HordeForge surface draws
+   from (web UIs, generated reports, READMEs, marks). Names follow the shadcn/ui
+   token contract so a Tailwind v4 + shadcn app maps them with `@theme inline`
+   unchanged; see brand/README.md for usage rules.
+
+   Source of the values: the zdtd-server webui ("paper cockpit",
+   zdtd-server/src/server/webui/webui.css), the most complete implementation.
+   A repo copies this file and keeps it in sync; it never invents a second
+   palette. */
+
+:root {
+  /* Paper: the ground every page sits on. */
+  --background: #f7f5f0;
+  --foreground: #1a1d21;
+  --card: #fffdf8;
+  --card-foreground: #1a1d21;
+  --popover: #fffdf8;
+  --popover-foreground: #1a1d21;
+  --secondary: #efece4;
+  --secondary-foreground: #1a1d21;
+  --muted: #efece4;
+  --muted-foreground: #4d545c;
+  --border: #e2ddd0;
+  --border-strong: #cfc8b6;
+  --input: #5f686f;
+
+  /* Signal: the one action and live-state color. */
+  --primary: #0f5c37;
+  --primary-foreground: #ffffff;
+  --ring: #0f5c37;
+  --accent: #dcefe1;
+  --accent-foreground: #0c4a2d;
+  --success-border: #9cc6aa;
+
+  /* State tones. Always paired with a word, never color alone. */
+  --warning: #6b4a00;
+  --warning-soft: #f2dbaa;
+  --warning-border: #cbab72;
+  --destructive: #8a2318;
+  --destructive-foreground: #3d0d07;
+  --destructive-soft: #f5c9c2;
+  --destructive-border: #d59f96;
+
+  /* Terminal: the single dark surface (charts, logs, consoles). */
+  --term: #101418;
+  --term-2: #1a2129;
+  --term-line: #2a333d;
+  --term-text: #d8e2dc;
+  --term-faint: #7f8b94;
+  --term-key: #ffd8a0;
+  --term-ok: #5fd894;
+  --term-bad: #ff7364;
+
+  /* Suites: identify a product in its mark and tile only. Never a state,
+     never a button, never a chart series. */
+  --suite-engine: #0f5c37;
+  --suite-observe: #1f4e8c;
+  --suite-guard: #4b2f8a;
+  --suite-forge: #7c4a14;
+
+  /* Shape and type. */
+  --radius: 0.625rem;
+  --radius-card: 10px;
+  --radius-control: 9px;
+  --radius-tile: 7px; /* at 32px; scale with the tile */
+  --shadow-card: 0 1px 2px rgba(26, 29, 33, 0.06), 0 8px 24px -12px rgba(26, 29, 33, 0.18);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}

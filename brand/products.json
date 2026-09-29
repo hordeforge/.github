@@ -1,0 +1,28 @@
+{
+  "suites": {
+    "engine": { "name": "Servers & Engine", "color": "#0f5c37" },
+    "observe": { "name": "Observability & Testing", "color": "#1f4e8c" },
+    "guard": { "name": "Security, AI & Infrastructure", "color": "#4b2f8a" },
+    "forge": { "name": "Modding Toolkit", "color": "#7c4a14" }
+  },
+  "products": [
+    { "id": "bloodwire", "codename": "BloodWire", "name": "ZDTD Server", "repo": "zdtd-server", "suite": "engine", "glyph": "bloodwire", "emoji": "⚡" },
+    { "id": "crucible", "codename": "Crucible", "name": "EfficientServer", "repo": "7dtd-server-optimizer", "suite": "engine", "glyph": "flame", "emoji": "🔥" },
+    { "id": "pangea", "codename": "Pangea", "name": "RealEarth", "repo": "7dtd-realearth", "suite": "engine", "glyph": "earth", "emoji": "🌍" },
+    { "id": "geiger", "codename": "Geiger", "name": "Server APM", "repo": "7dtd-server-apm", "suite": "observe", "glyph": "radiation", "emoji": "☣️" },
+    { "id": "screamer", "codename": "Screamer", "name": "LoadGen", "repo": "7dtd-loadgen", "suite": "observe", "glyph": "megaphone", "emoji": "😱" },
+    { "id": "vanguard", "codename": "Vanguard", "name": "Playtest Runner", "repo": "7dtd-playtest", "suite": "observe", "glyph": "flag", "emoji": "🚩" },
+    { "id": "hotwire", "codename": "Hotwire", "name": "FastConnect", "repo": "7dtd-fastconnect", "suite": "observe", "glyph": "plug-zap", "emoji": "🔌" },
+    { "id": "safehouse", "codename": "Safehouse", "name": "Lab Isolation", "repo": "7dtd-sandbox", "suite": "observe", "glyph": "house", "emoji": "🏠" },
+    { "id": "deadeye", "codename": "Deadeye", "name": "Vision Review", "repo": "7dtd-vision-review", "suite": "observe", "glyph": "scan-eye", "emoji": "👁️" },
+    { "id": "landclaim", "codename": "Landclaim", "name": "ServerGuard", "repo": "7dtd-server-guard", "suite": "guard", "glyph": "shield-check", "emoji": "🛡️" },
+    { "id": "clanker", "codename": "Clanker", "name": "FPS Bots Mod", "repo": "7dtd-fps-bots", "suite": "guard", "glyph": "bot", "emoji": "🤖" },
+    { "id": "outpost", "codename": "Outpost", "name": "Server Container", "repo": "7dtd-server-container", "suite": "guard", "glyph": "container", "emoji": "🏰" },
+    { "id": "schematics", "codename": "Schematics", "name": "Engine Research", "repo": "7dtd-engine-research", "suite": "guard", "glyph": "scroll-text", "emoji": "📜" },
+    { "id": "quarantine", "codename": "Quarantine", "name": "WasmHost", "repo": "7dtd-wasm", "suite": "guard", "glyph": "biohazard", "emoji": "🧫" },
+    { "id": "anvil", "codename": "Anvil", "name": "Mod Template", "repo": "7dtd-mod-template", "suite": "forge", "glyph": "anvil", "emoji": "🔨" },
+    { "id": "shamway", "codename": "Shamway", "name": "Asset Pipeline", "repo": "7dtd-asset-pipeline", "suite": "forge", "glyph": "factory", "emoji": "🏭" },
+    { "id": "unityz", "codename": "Unityz", "name": "Unity Asset Toolkit", "repo": "unityz", "suite": "forge", "glyph": "puzzle", "emoji": "🧩" },
+    { "id": "wrench", "codename": "Wrench", "name": "Mod Settings", "repo": "7dtd-mod-settings", "suite": "forge", "glyph": "wrench", "emoji": "🔧" }
+  ]
+}

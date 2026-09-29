@@ -52,7 +52,10 @@ org profile both read:
 ```
 
 - **Every repository has a codename.** Hybrid title: emoji, codename,
-  parenthesised descriptive name. The codename is the one used in
+  parenthesised descriptive name. Codename, emoji, suite and tile come from
+  [`brand/products.json`](brand/products.json); codename and emoji are unique across the
+  org, and the rest of the visual identity (mark, palette, icons) is in
+  [`brand/README.md`](brand/README.md). The codename is the one used in
   [`profile/README.md`](profile/README.md) and in the `Mods/` folder name.
 - **The coverage badge is only claimed if CI regenerates it.** A badge that
   points at a stale `badges` branch is worse than no badge.
