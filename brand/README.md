@@ -14,6 +14,7 @@ rendered; open it locally or through a raw-file preview.
 | [`icons/`](icons) | 24px UI icon library (Lucide subset) |
 | [`tiles/`](tiles) | Generated 32px product tiles and the master mark |
 | [`banner.svg`](banner.svg) | Generated org profile header |
+| [`avatar.png`](avatar.png) | 512px master mark for the GitHub org avatar (`rsvg-convert -w 512 tiles/hordeforge.svg -o avatar.png`; uploaded by hand in org settings, GitHub has no API for it) |
 | [`index.html`](index.html) | Generated brand sheet |
 
 Regenerate after editing `products.json`, a glyph, or `tokens.css`:
@@ -56,8 +57,8 @@ The tile is the product's favicon, README icon, and app icon.
 - A suite color identifies a product and nothing else. It never marks state,
   a button, or a chart series; a UI's own palette does that.
 - Codenames and emoji are unique across the org. Check `products.json`
-  before adding a product; the emoji is the one used in README titles and
-  the profile tables.
+  before adding a product; the emoji leads the README title; the profile
+  tables show the tile instead.
 - A new product needs a row in `products.json`, a glyph, a rebuild, and the
   profile README row, in one change.
 
