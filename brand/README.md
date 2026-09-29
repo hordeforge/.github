@@ -79,6 +79,30 @@ unchanged. The palette is the "paper cockpit":
 Body text on paper and on cards meets WCAG AA; check any new pairing before
 shipping it.
 
+### Dark tools
+
+A tool whose content is itself dark or dense (3D map viewers, flame graphs,
+APM dashboards, in-game overlays) is set entirely on the terminal palette
+instead of paper. It keeps one signal color, terminal green `#5fd894`, and
+never introduces its own accent:
+
+| Role | Token | Value |
+|---|---|---|
+| Ground | `--term` | `#101418` |
+| Raised surface | `--term-2` | `#1a2129` |
+| Rules and borders | `--term-line` | `#2a333d` |
+| Text | `--term-text` | `#d8e2dc` |
+| Secondary text | `--term-faint` | `#7f8b94` |
+| Signal, ok | `--term-ok` | `#5fd894` |
+| Warning, key | `--term-key` | `#ffd8a0` |
+| Bad | `--term-bad` | `#ff7364` |
+
+Every text color above clears 4.5:1 on both grounds; the lowest pair is
+secondary text on the raised surface at 4.66:1.
+
+The product tile still identifies the tool (header and favicon); its suite
+color does not become a UI color.
+
 ## Type
 
 System stacks only, no webfonts: pages load offline and from a game host.
