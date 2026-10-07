@@ -617,6 +617,21 @@ World sizes: stock RWG comment supports 6k-10k class sizes; pure PC can go large
 | AssetStudio / UABE | Unity assets (version-sensitive) | External |
 | Wireshark | LiteNetLib traffic (protocol work) | External; loadgen territory |
 
+### Live inspection (your own client and dedicated only)
+
+Static reading (ILSpy, Cecil dumps) says what the code can do; these show what a running process does. Use them only on a stock client or dedicated you run yourself, EAC off (any C# mod already forces `-noeac`), never against a public server. None is wired into a workspace harness yet; facts below are from each tool's upstream page (checked 2026-10-07), not from a run here.
+
+| Tool | Use | Caveat |
+|---|---|---|
+| [UnityExplorer](https://github.com/yukieiji/UnityExplorer) (maintained fork; [sinai-dev's original](https://github.com/sinai-dev/UnityExplorer) is archived) | In-game scene hierarchy, component inspector, C# console | Ships for BepInEx and MelonLoader, which 7DTD does not use. The **Standalone (Mono)** build loads from any host if UniverseLib, HarmonyX and MonoMod are loaded first, then `ExplorerStandalone.CreateInstance()`; a 7DTD `IModApi` mod would be that host. HarmonyX beside stock `0_TFP_Harmony` is untested |
+| [Frida](https://frida.re/) | Attach to the client or dedicated, hook native functions, log arguments | Native-level; managed methods are reached through the Mono runtime's exported API, not by C# name |
+| [RenderDoc](https://github.com/baldurk/renderdoc) | Client frame captures: draws, render targets, constant buffers, depth | Under Proton the client's D3D calls reach Vulkan through the translation layer, so captures show Vulkan calls; enable RenderDoc's Vulkan layer with `ENABLE_VULKAN_RENDERDOC_CAPTURE=1` in the launch options. Client only: the dedicated renders nothing |
+| [dnSpyEx](https://github.com/dnSpyEx/dnSpy) | Breakpoints and stepping in `Assembly-CSharp` | Unity debugging needs a debug-enabled `mono-2.0-bdwgc.dll` from [dnSpy-Unity-mono](https://github.com/dnSpyEx/dnSpy-Unity-mono), whose solutions stop at Unity 2020.x; the 2022.3 client needs a new port first (its README's "Supporting a new Unity version" steps). Windows build, so Proton client only, not the Linux dedicated |
+
+### Trace-replay oracle (stock server vs a port)
+
+Reading IL finds what a port should do; replaying real traffic finds where it does not. Record a session against the **stock** dedicated (every packet in order, plus per-tick state snapshots: entity positions, health, inventories, world time) and replay the client side against the port (zdtd), comparing replies and state tick by tick. The first divergent tick and field is the bug report. Rules: one recording pins the game build, world, seed and serverconfig, like any baseline; prove the comparator can fail (perturb one field, expect a mismatch) before trusting a pass; off-by-one tick is the usual false mismatch, so measure which tick an input lands on before reading a diff. Method from universal-modder's [oracles note](https://github.com/rehan-remade/universal-modder/blob/main/knowledge/techniques/oracles-how-agents-know-a-mod-works.md) (MIT). Recording stock behaviour is research ([`7dtd-engine-research`](7dtd-engine-research/AGENTS.md)); replay checks live with the port. This is also what closes an open item in [`zdtd-server/docs/GAP_ANALYSIS.md`](zdtd-server/docs/GAP_ANALYSIS.md) (section "V3.2.0"): replacing the bundled 3.1.0 AssignIds dump still needs a live 3.2.0 client capture to prove byte-exactness.
+
 ### Test discipline
 
 1. Fresh throwaway world for spawn/loot/progression changes.
