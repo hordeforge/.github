@@ -46,6 +46,7 @@ make graphify-wiki     # re-export wiki from existing graph.json
 | **🏠 Safehouse** *(Lab Isolation)* | `7dtd-sandbox/` | [`hordeforge/7dtd-sandbox`](https://github.com/hordeforge/7dtd-sandbox) | Fresh Steam-free client/dedi instances for harnesses | [`7dtd-sandbox/AGENTS.md`](7dtd-sandbox/AGENTS.md) |
 | **📜 Schematics** *(Engine Research)* | `7dtd-engine-research/` | [`hordeforge/7dtd-engine-research`](https://github.com/hordeforge/7dtd-engine-research) | Dedicated engine RE narratives (loop, AI, net, save, terrain APIs, Cecil dumps) | [`7dtd-engine-research/AGENTS.md`](7dtd-engine-research/AGENTS.md) |
 | **🏭 Shamway** *(Asset Pipeline)* | `7dtd-asset-pipeline/` | [`hordeforge/7dtd-asset-pipeline`](https://github.com/hordeforge/7dtd-asset-pipeline) | Mod-owned AssetBundle build, editorless bundle synthesis, and the offline gates for silent asset failures | [`7dtd-asset-pipeline/AGENTS.md`](7dtd-asset-pipeline/AGENTS.md) |
+| **🧫 Quarantine** *(WasmHost)* | `7dtd-wasm/` | [`hordeforge/7dtd-wasm`](https://github.com/hordeforge/7dtd-wasm) | Embeddable WebAssembly sandbox host for untrusted mods (fuel, memory, module caps; ABI only) | [`7dtd-wasm/AGENTS.md`](7dtd-wasm/AGENTS.md) |
 
 ---
 
@@ -61,12 +62,13 @@ BloodWire (zdtd)     → optional Zig dedi (client-wire rewrite; not a mod host)
 Hotwire (connect)    → client join-by-IP / boot skip only
 Vanguard (playtest)  → stock-client gameplay scenarios + host scorer (not a server fix)
 Shamway (assets)     → builds and gates a mod's own AssetBundle (client content, not a server path)
+Quarantine (wasm)    → sandbox-hosts untrusted mods (no game objects, ABI only)
 Safehouse (lab)      → isolates stock client/dedi instances for harnesses (not wasm)
 ```
 
 ### Testing tiers
 
-See [ADR 0001](docs/adr/0001-test-tiers-and-declarative-suites.md).
+See [ADR 0001](https://github.com/hordeforge/.github/blob/main/docs/adr/0001-test-tiers-and-declarative-suites.md).
 
 | Tier | Owns | Must not |
 |---|---|---|
@@ -102,7 +104,7 @@ Rules that follow from the tiers:
 - **Anti-cheat behavior and exploit validation** live only in `7dtd-server-guard`.
 - **Container server deployment** (image, config template, mod staging from sibling `dist/`) lives only in `7dtd-server-container`. It hosts no mod code, no measurement, and no game RE.
 - **Mod asset bundles are built only through `7dtd-asset-pipeline`.** It owns the build, the container and revision gates, and the editorless writer; it owns no art and no mod. Mods keep their own assets, generators and provenance.
-- **Stock-game research lives only in `7dtd-engine-research`.** All reverse-engineering of the shipped dedicated server belongs there (`docs/` and `tools/`). Reimplementation code and mods stay in their own repos. Method: [`7dtd-engine-research/docs/re-methodology.md`](7dtd-engine-research/docs/re-methodology.md).
+- **Stock-game research lives only in `7dtd-engine-research`.** All reverse-engineering of the shipped dedicated server belongs there (`docs/` and `tools/`). Reimplementation code and mods stay in their own repos. Method: [`7dtd-engine-research/docs/meta/re-methodology.md`](7dtd-engine-research/docs/meta/re-methodology.md).
 - **zdtd-server** does not ship game DLLs or bulk IL; protocol facts come from `7dtd-engine-research/docs`.
 - **zdtd-server is not a 7dtd-server-apm target** (no Mono bridge). It has its **own** metrics/profiler under `zdtd-server/src/apm/`. Validate with loadgen + those dumps. **zdtd-server does not load mods**.
 
@@ -163,6 +165,7 @@ Any C# code mod forces the server EAC-off (`-noeac`); only XML-only mods run und
 | Stock client join-by-IP / auto-join | `7dtd-fastconnect` |
 | Automated real-client play suites | `7dtd-playtest` |
 | Lab client/dedi instance isolation | `7dtd-sandbox` (Safehouse; remote `7dtd-sandbox`) |
+| Sandbox-host untrusted mods (wasm) | `7dtd-wasm` (Quarantine) |
 | Capture, compare, budget, export | `7dtd-server-apm` |
 | Reviewed AI LOD / mesh / dedicated skips | `7dtd-server-optimizer` |
 | Server-side anti-cheat evidence / impossible-action rejection | `7dtd-server-guard` |
