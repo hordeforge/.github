@@ -29,17 +29,27 @@ contrast, or a product names a glyph that is not in `glyphs/`.
 
 ## The mark
 
-An H whose crossbar is a tick trace: the 20 TPS heartbeat every HordeForge
-tool measures, forges, or defends. Paper stems, terminal-green pulse
-(`#5fd894`), ink tile (`#1a1d21`), corner radius 7 at 32px.
+An anvil in a hex badge, cut by three claw slashes: the horde tearing
+through the forge. Iron anvil, molten slashes (`#ffe066` to `#ff7a1a` to
+`#c4140f`), ember sparks (`#ffd25e`), forge ground (`#120d0b`), on the ink
+tile (`#1a1d21`, corner radius 7 at 32px). `scripts/build_brand.py` draws it
+on a 512 grid and scales it into the tile and the banner.
 
 - Use [`tiles/hordeforge.svg`](tiles/hordeforge.svg) as is. Do not recolor
-  the pulse, outline the tile, or set the mark on a busy image.
+  the slashes, outline the tile, or set the mark on a busy image.
 - Single-color contexts (a favicon mask, an embossed print) use
-  [`glyphs/hordeforge.svg`](glyphs/hordeforge.svg) in `currentColor`.
-- Minimum size 16px. Clear space around the tile: one quarter of its width.
-- The wordmark is the name set in the system sans at weight 700, never
-  redrawn or italicized: **HordeForge**, one word, capital H and F.
+  [`glyphs/hordeforge.svg`](glyphs/hordeforge.svg) in `currentColor`: the
+  hex and the three slashes, no anvil.
+- The anvil belongs to the mark only inside the badge; the Anvil product
+  keeps its own bronze tile.
+- Minimum size 24px. At 32px and under the sparks vanish and the anvil
+  reads as a bar; under 24px use the glyph. Clear space around the tile: one quarter of its width.
+- The wordmark is **HORDEFORGE** in capitals, system sans at weight 800,
+  never redrawn or italicized: HORDE in paper, FORGE in the molten
+  gradient. In running text the name stays **HordeForge**, one word,
+  capital H and F.
+- The molten colors belong to the mark. They never mark state, a button,
+  or a chart series.
 
 ## Product tiles
 
