@@ -39,7 +39,12 @@ class BrandData(TypedDict):
 
 PAPER = "#f7f5f0"
 INK = "#1a1d21"
-PULSE = "#5fd894"
+MOLTEN_HOT = "#ffe066"
+MOLTEN = "#ff7a1a"
+MOLTEN_DEEP = "#c4140f"
+EMBER = "#ffd25e"
+FORGE_GROUND = "#120d0b"
+BADGE_PX = 512  # the mark is drawn on a 512 grid and scaled to each output
 TILE_PX = 32
 TILE_RADIUS = 7
 GLYPH_OFFSET = 4  # centers the 24px glyph grid in the 32px tile
@@ -86,16 +91,54 @@ def tile_svg(label: str, fill: str, body: str) -> str:
     )
 
 
+def badge_defs() -> str:
+    return (
+        "<defs>"
+        '<linearGradient id="hf-molten" x1="0" y1="0" x2="0" y2="1">'
+        f'<stop offset="0" stop-color="{MOLTEN_HOT}"/><stop offset="0.45" stop-color="{MOLTEN}"/>'
+        f'<stop offset="1" stop-color="{MOLTEN_DEEP}"/></linearGradient>'
+        '<linearGradient id="hf-rim" x1="0" y1="0" x2="1" y2="1">'
+        '<stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#8f0f0c"/></linearGradient>'
+        '<linearGradient id="hf-iron" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="#4a4440"/><stop offset="1" stop-color="#1c1917"/></linearGradient>'
+        '<radialGradient id="hf-glow" cx="0.5" cy="0.62" r="0.5">'
+        '<stop offset="0" stop-color="#ff5a14" stop-opacity="0.55"/>'
+        '<stop offset="1" stop-color="#ff5a14" stop-opacity="0"/></radialGradient>'
+        "</defs>"
+    )
+
+
+def badge_body() -> str:
+    """The HordeForge mark on the 512 grid: an anvil in a hex badge, cut by
+    three molten claw slashes."""
+    return (
+        '<polygon points="256,22 459,139 459,373 256,490 53,373 53,139" '
+        f'fill="{FORGE_GROUND}" stroke="url(#hf-rim)" stroke-width="12" stroke-linejoin="round"/>'
+        '<polygon points="256,48 436,152 436,360 256,464 76,360 76,152" '
+        'fill="url(#hf-glow)" stroke="#2b2320" stroke-width="3"/>'
+        '<path d="M92,214 C128,203 150,198 170,198 L404,198 L404,244 L374,244 C352,250 340,266 338,290 '
+        "L338,318 L370,346 L370,368 L146,368 L146,346 L178,318 L178,290 C176,266 158,252 128,244 "
+        'C110,238 98,228 92,214 Z" fill="url(#hf-iron)" stroke="#0a0706" stroke-width="4" stroke-linejoin="round"/>'
+        '<path d="M100,212 C132,204 152,201 170,201 L401,201" fill="none" stroke="#ff9a3c" '
+        'stroke-width="5" stroke-linecap="round"/>'
+        f'<g fill="url(#hf-molten)" stroke="{FORGE_GROUND}" stroke-width="7" stroke-linejoin="round" '
+        'paint-order="stroke">'
+        '<polygon points="250,118 207,272 150,424 193,264"/>'
+        '<polygon points="314,96 268,268 206,446 252,258"/>'
+        '<polygon points="372,118 329,272 272,424 315,264"/></g>'
+        f'<g fill="{EMBER}"><circle cx="142" cy="150" r="5"/><circle cx="176" cy="122" r="3.5"/>'
+        '<circle cx="404" cy="160" r="4.5"/><circle cx="378" cy="132" r="3"/>'
+        '<polygon points="214,148 219,158 214,168 209,158"/><polygon points="420,206 425,214 420,222 415,214"/></g>'
+    )
+
+
 def master_tile() -> str:
-    """The HordeForge mark: paper stems, terminal-green pulse, on ink."""
+    """The HordeForge mark as a 32px tile on ink."""
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {TILE_PX} {TILE_PX}" '
-        f'width="{TILE_PX}" height="{TILE_PX}" role="img" aria-label="HordeForge">'
+        f'width="{TILE_PX}" height="{TILE_PX}" role="img" aria-label="HordeForge">{badge_defs()}'
         f'<rect width="{TILE_PX}" height="{TILE_PX}" rx="{TILE_RADIUS}" fill="{INK}"/>'
-        f'<g transform="translate({GLYPH_OFFSET} {GLYPH_OFFSET})" fill="none" stroke-width="2.25" '
-        f'stroke-linecap="round" stroke-linejoin="round">'
-        f'<path d="M5 4v16M19 4v16" stroke="{PAPER}"/>'
-        f'<path d="M5 12h3l2-4 4 8 2-4h3" stroke="{PULSE}"/></g></svg>\n'
+        f'<g transform="scale({TILE_PX / BADGE_PX})">{badge_body()}</g></svg>\n'
     )
 
 
@@ -105,17 +148,16 @@ def banner_svg() -> str:
     return (
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 200" width="880" height="200" '
         'role="img" aria-label="HordeForge: high-performance systems engineering for 7 Days to Die">'
+        f"{badge_defs()}"
         f'<rect width="880" height="200" rx="20" fill="{INK}"/>'
-        '<g transform="translate(56 52) scale(4)" fill="none" stroke-width="2.25" '
-        'stroke-linecap="round" stroke-linejoin="round">'
-        f'<path d="M5 4v16M19 4v16" stroke="{PAPER}"/>'
-        f'<path d="M5 12h3l2-4 4 8 2-4h3" stroke="{PULSE}"/></g>'
+        f'<g transform="translate(36 12) scale({176 / BADGE_PX})">{badge_body()}</g>'
         '<g font-family="-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif">'
-        f'<text x="200" y="104" font-size="56" font-weight="700" fill="{PAPER}" letter-spacing="-1">HordeForge</text>'
-        '<text x="202" y="142" font-size="20" fill="#7f8b94">High-performance systems engineering for 7 Days to Die</text>'
-        '</g>'
-        f'<path d="M200 164h120" stroke="{PULSE}" stroke-width="3" stroke-linecap="round"/>'
-        '</svg>\n'
+        f'<text x="236" y="108" font-size="64" font-weight="800" fill="{PAPER}" letter-spacing="1">'
+        'HORDE<tspan fill="url(#hf-molten)">FORGE</tspan></text>'
+        '<text x="238" y="146" font-size="20" fill="#7f8b94">High-performance systems engineering for 7 Days to Die</text>'
+        "</g>"
+        f'<path d="M238 166h120" stroke="{MOLTEN}" stroke-width="3" stroke-linecap="round"/>'
+        "</svg>\n"
     )
 
 
