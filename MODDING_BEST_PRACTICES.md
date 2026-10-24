@@ -1,8 +1,8 @@
 # 7 Days to Die modding: consolidated best practices
 
-**Target game:** V **3.2.0** (b9) Stable, Henpocalypse line  
+**Target game:** V **3.3.0** (b18)  
 **Engine (this machine):** Unity **2022.3.62f2**, **Mono** (not IL2CPP), WindowsPlayer under Proton for client; dedicated is Linux/x86_64 headless  
-**Last validated:** 2026-08-28 against official V3.2.0 (b9) + local V3.2.0 (b9) dedicated, [7d2dmodding.wiki.gg](https://7d2dmodding.wiki.gg/) (pages marked verified for 3.0), official [Mod Interface](https://7daystodie.wiki.gg/wiki/Mod_Interface) / [XUi](https://7daystodie.wiki.gg/wiki/XUi), [7DaysToDieMods.com](https://7daystodiemods.com/) install guidance, **local Steam installs + client log**, and the projects in this workspace.
+**Last validated:** 2026-10-24 against the shipped V3.3.0 (b18) dedicated `Assembly-CSharp.dll` and `Data/Config` tree (sha256 pin in [`7dtd-engine-research/tools/data/stock_facts.json`](7dtd-engine-research/tools/data/stock_facts.json)), [7d2dmodding.wiki.gg](https://7d2dmodding.wiki.gg/) (pages marked verified for 3.0), official [Mod Interface](https://7daystodie.wiki.gg/wiki/Mod_Interface) / [XUi](https://7daystodie.wiki.gg/wiki/XUi), [7DaysToDieMods.com](https://7daystodiemods.com/) install guidance, **the local Steam client install**, and the projects in this workspace.
 
 This is the **workspace root** canonical guide. Project-specific docs stay for deep detail; this file owns **what to do where**, **which method to use when**, and **how to validate** after game updates.
 
@@ -16,11 +16,11 @@ This is the **workspace root** canonical guide. Project-specific docs stay for d
 | [`7dtd-server-optimizer/docs/SCALE_1000x10000.md`](7dtd-server-optimizer/docs/SCALE_1000x10000.md) | Thought experiment: data structures for huge MP/AI |
 | [`7dtd-server-optimizer/docs/SIM_PARALLELISM.md`](7dtd-server-optimizer/docs/SIM_PARALLELISM.md) | Speeding sim: extract off main, threading policy, hot paths, Amdahl |
 | [`7dtd-server-optimizer/docs/FEATURES.md`](7dtd-server-optimizer/docs/FEATURES.md) | EfficientServer patch groups and acceptance notes |
-| [`research/oss-tools/NOTES.md`](research/oss-tools/NOTES.md) | OSS tools survey (optim lessons from IceCoffee, SphereII, CSMM, …) |
-| [`research/7dtd-ServerTools/NOTES.md`](research/7dtd-ServerTools/NOTES.md) | ServerTools optim-relevant bits |
-| [`research/naiwazi/NOTES.md`](research/naiwazi/NOTES.md) | NAIWAZI ServerKit reconstruction |
-| [`research/docs/loop.md`](research/docs/loop.md) | Complete dedicated server game/sim loop RE map |
-| [`research/docs/INDEX.md`](research/docs/INDEX.md) | Dedicated RE dumps index |
+| [`7dtd-engine-research/oss-tools/NOTES.md`](7dtd-engine-research/oss-tools/NOTES.md) | OSS tools survey (optim lessons from IceCoffee, SphereII, CSMM, …) |
+| [`7dtd-engine-research/oss-tools/servertools.md`](7dtd-engine-research/oss-tools/servertools.md) | ServerTools optim-relevant bits |
+| [`7dtd-engine-research/oss-tools/naiwazi.md`](7dtd-engine-research/oss-tools/naiwazi.md) | NAIWAZI ServerKit reconstruction |
+| [`7dtd-engine-research/docs/loop/loop.md`](7dtd-engine-research/docs/loop/loop.md) | Complete dedicated server game/sim loop RE map |
+| [`7dtd-engine-research/docs/INDEX.md`](7dtd-engine-research/docs/INDEX.md) | Dedicated RE dumps index |
 | [`7dtd-realearth/docs/MODDING_REFERENCES.md`](7dtd-realearth/docs/MODDING_REFERENCES.md) | Link index (sites, Discords, tools) |
 | [`7dtd-realearth/docs/MODLET.md`](7dtd-realearth/docs/MODLET.md) | RealEarth install + YDim expand |
 | [`7dtd-realearth/docs/HEIGHT_LIMITS.md`](7dtd-realearth/docs/HEIGHT_LIMITS.md) | Vertical engine limits |
@@ -41,14 +41,14 @@ This is the **workspace root** canonical guide. Project-specific docs stay for d
 
 | Field | Value | Grade |
 |---|---|---|
-| Client log version | `Version: V 3.2.0 (b9) Compatibility Version: V 3.2.0` | Measured (Constants.cVersion* + Steam build 2026-08-28) |
+| Client log version | `Version: V 3.3.0 (b18) Compatibility Version: V 3.3.0` | Derived (`version.display` / `stock_wire` pins; the log line was not re-read on b18) |
 | Unity | `2022.3.62f2` | Measured (`UnityPlayer.so` strings) + ARCHITECTURE |
 | Runtime | Mono / MonoBleedingEdge | Measured (log: Mono path + Manager ReloadAssembly) |
 | Stock Harmony | `Mods/0_TFP_Harmony`, `Name=TFP_Harmony`, **Version 1.1.0.4**, `SkipWithAntiCheat=true` | Measured |
 | Localization vanilla file | `Data/Config/Localization.csv` (not `.txt`) | Measured |
 | XUi folders | `XUi_Common`, `XUi_Menu`, `XUi_InGame` each with `styles.xml`, `templates.xml`, … | Measured |
 | Vertical markers in assembly | `Height255`, `ChunkBlockYDim`, `ChunkBlockYDimM1`, … | Measured (`strings` on dedicated `Assembly-CSharp`) |
-| Local install pins | Client + dedicated both present under Steam common | Measured; see `7dtd-realearth/docs/GAME_VERSION.md` |
+| Local install pins | Client under Steam common (build `25661859`, has `Data/Config/toolbelt.xml`); dedicated studied from the shipped b18 copy (sha256 pin above) | Measured 2026-10-24 |
 
 ### Install roots on this machine (Measured)
 
@@ -67,6 +67,18 @@ This is the **workspace root** canonical guide. Project-specific docs stay for d
 | Prefabs | `<install>/Data/Prefabs/` (`POIs`, `RWGTiles`, …) |
 
 Dedicated can override userdata with uncommented `UserDataFolder` in `serverconfig.xml` (stock comment documents this).
+
+### V3.3.0 inventory/equipment rework: what a b10 mod must change (Corpus)
+
+The V3.3.0 dedicated assembly reworked item containers and the sign subsystem. A code mod built against V3.2.0 b10 breaks at compile time or on first use, and an XML mod that assumed a compiled toolbelt or a transactional-inventory patch point has nothing left to patch.
+
+- **Equipment is 13 slots.** `EquipmentSlots.Backpack = 12` was appended; `Count` and `None` moved from 12 to 13, and every b10 slot keeps its number. `Equipment.GetSlotCount()` is the grid length, so loops over it now visit slot 12 and the armor passes include it. Sources: [`7dtd-engine-research/docs/gameplay/items.md`](7dtd-engine-research/docs/gameplay/items.md), [`combat-damage.md`](7dtd-engine-research/docs/gameplay/combat-damage.md).
+- **The toolbelt is data-driven.** New `Data/Config/toolbelt.xml` and `ToolbeltConfig` size it: 10 play slots, 20 prefab-editor slots. The b10 constants `PUBLIC_SLOTS`, `INVENTORY_SLOTS`, `DUMMY_SLOT_IDX` and `SHIFT_KEY_SLOT_OFFSET` are gone. A mod that enumerates or hashes `Data/Config` must include the new file. Sources: [`items.md`](7dtd-engine-research/docs/gameplay/items.md), [`changelog-3.3.0.md`](7dtd-engine-research/docs/releases/changelog-3.3.0.md) §3.
+- **The held item lives in `Hand`.** `HeldItemState` is replaced by `HoldingMode {Current, Bare, Transient}`; `EntityAlive.Hand` and `Inventory.Hand` own selection, equip and the held model, and `Inventory` keeps delegating wrappers. Source: [`items.md`](7dtd-engine-research/docs/gameplay/items.md).
+- **Two equipment API breaks.** `Equipment.SetSlotItem(int, ItemValue)` lost its `isLocal` argument, and `Equipment.GetItems` was removed; read slots with `GetSlotCount()` and `GetSlotItem(i)`, or use the `ItemGrid`. Source: [`items.md`](7dtd-engine-research/docs/gameplay/items.md).
+- **The inventory wire is client-serialized blobs.** `NetPackagePlayerInventory` carries optional `inventoryData`, `bagData` and `equipmentData` blobs plus the drag `ItemStack`; `NetPackagePlayerEquipment` carries one equipment blob. `NetPackageInventoryData*` and `NetPackageInventoryTransaction*` are gone with `TransactionalInventory`, `InventoryTransaction` and `InventoryManager`, so a mod that patched or sent the b10 transaction gate has no target. The b10 and b18 bodies are not mutually readable, so a client and a server must be on the same build. Source: [`protocol-packages.md`](7dtd-engine-research/docs/network/protocol-packages.md).
+- **Signs.** `SignData` blobs are version 3 and carry `SignSharing` (`Private`, `Selectable`, `Copyable`); the reader still accepts versions 1 to 3 and rewrites them to 3, and `<sign>` XML gains an optional `sharing` attribute. Source: [`signs.md`](7dtd-engine-research/docs/gameplay/signs.md).
+- **Saves still load.** The per-player `.ttp` header version moved to 62; a b10 save migrates on read and is rewritten in the new container format. A tool that parses `PlayerDataFile` directly must handle version 62. Source: [`save-region.md`](7dtd-engine-research/docs/world/save-region.md) §1.3.
 
 ### V3.0 modding deltas that still matter on 3.0.1 (Official)
 
@@ -630,7 +642,7 @@ Static reading (ILSpy, Cecil dumps) says what the code can do; these show what a
 
 ### Trace-replay oracle (stock server vs a port)
 
-Reading IL finds what a port should do; replaying real traffic finds where it does not. Record a session against the **stock** dedicated (every packet in order, plus per-tick state snapshots: entity positions, health, inventories, world time) and replay the client side against the port (zdtd), comparing replies and state tick by tick. The first divergent tick and field is the bug report. Rules: one recording pins the game build, world, seed and serverconfig, like any baseline; prove the comparator can fail (perturb one field, expect a mismatch) before trusting a pass; off-by-one tick is the usual false mismatch, so measure which tick an input lands on before reading a diff. Method from universal-modder's [oracles note](https://github.com/rehan-remade/universal-modder/blob/main/knowledge/techniques/oracles-how-agents-know-a-mod-works.md) (MIT). Recording stock behaviour is research ([`7dtd-engine-research`](7dtd-engine-research/AGENTS.md)); replay checks live with the port. This is also what closes an open item in [`zdtd-server/docs/GAP_ANALYSIS.md`](zdtd-server/docs/GAP_ANALYSIS.md) (section "V3.2.0"): replacing the bundled 3.1.0 AssignIds dump still needs a live 3.2.0 client capture to prove byte-exactness.
+Reading IL finds what a port should do; replaying real traffic finds where it does not. Record a session against the **stock** dedicated (every packet in order, plus per-tick state snapshots: entity positions, health, inventories, world time) and replay the client side against the port (zdtd), comparing replies and state tick by tick. The first divergent tick and field is the bug report. Rules: one recording pins the game build, world, seed and serverconfig, like any baseline; prove the comparator can fail (perturb one field, expect a mismatch) before trusting a pass; off-by-one tick is the usual false mismatch, so measure which tick an input lands on before reading a diff. Method from universal-modder's [oracles note](https://github.com/rehan-remade/universal-modder/blob/main/knowledge/techniques/oracles-how-agents-know-a-mod-works.md) (MIT). Recording stock behaviour is research ([`7dtd-engine-research`](7dtd-engine-research/AGENTS.md)); replay checks live with the port. This is also what closes an open item in [`zdtd-server/docs/GAP_ANALYSIS.md`](zdtd-server/docs/GAP_ANALYSIS.md) (section "V3.2.0"): replacing the bundled 3.1.0 AssignIds dump still needs a live 3.3.0 client capture to prove byte-exactness.
 
 ### Test discipline
 
@@ -837,7 +849,7 @@ Must edit IL mid-method?
 | Resource | URL |
 |---|---|
 | V3.0 release notes (modding section) | https://7daystodie.com/v3-0-dead-hot-summer-release-notes/ |
-| V3.2.0 (b9) | Steam 2026-08-28; exact-diff: `7dtd-engine-research/docs/releases/changelog-3.2.0.md` |
+| V3.3.0 (b18) | Pin studied 2026-10-24; exact-diff: `7dtd-engine-research/docs/releases/changelog-3.3.0.md` |
 | V3.1.0 Henpocalypse | https://7daystodie.com/v3-1-0-henpocalypse-release-notes/ |
 | V3.0.1 Stable | https://7daystodie.com/v3-0-1-stable-release/ |
 | Mod Interface | https://7daystodie.wiki.gg/wiki/Mod_Interface |
@@ -887,5 +899,6 @@ Guppycur modding, 7d2d wiki modding, 7DaysToDieMods.com, TFP official: see `7dtd
 - **2026-07-16 (review):** Grounded version/Unity/Harmony/paths/logs in local installs and client log; added method chooser, evidence grades, offline vs in-game TFMs, stock serverconfig property lists (kept vs Sandbox-migrated), WebMod/WebDashboard, world/prefab boundaries, Harmony tool matrix, stock-knob-before-Harmony, validation matrix, XPath `<configs>`/`set` vs `setattribute`, loadgen EAC limit.
 - **2026-07-16:** Initial workspace consolidation from optimizer draft, RealEarth packaging/height/modlet notes, APM/loadgen/optimizer boundaries, V3.0 / V3.0.1 notes, 7d2dmodding Getting Started + XPath (3.0), official XUi / Mod Interface, 7DaysToDieMods install conventions.
 
-- **2026-08-28:** Retarget workspace modding guide to V3.2.0 (b9); wire + held-entity notes carried from V3.1.0, exact-diff changelog in `7dtd-engine-research`.
+- **2026-08-28:** Retarget workspace modding guide to the V3.2.0 line; wire + held-entity notes carried from V3.1.0, exact-diff changelog in `7dtd-engine-research`.
 - **2026-08-02:** Retarget workspace modding guide to V3.1.0 (b14) Henpocalypse; TE wire + held-entity notes.
+- **2026-10-24:** Retarget workspace modding guide from V3.2.0 (b10) to V3.3.0 (b18); added the inventory/equipment rework deltas and regenerated the vendored copies.
