@@ -1,0 +1,35 @@
+name: ci
+
+# The workspace repository has no code, but it does have generated outputs:
+# the brand tiles, banner and sheet are built from brand/products.json and
+# brand/glyphs, and every product profile links into them. Nothing checked
+# that the committed outputs still match the inputs, so a glyph or a suite
+# colour could change and the published brand sheet would keep serving the
+# previous one. This job runs the same --check the maintainer runs.
+#
+# Deliberately one job with one step: a docs-and-assets repository does not
+# need an interpreter matrix, and a gate that takes seconds cannot wedge a
+# runner.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  brand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The script is stdlib-only and prints its own usage, so the runner's
+      # interpreter is enough; no uv project, no lockfile, nothing to install.
+      - name: Brand outputs match their sources
+        run: python3 scripts/build_brand.py --check
