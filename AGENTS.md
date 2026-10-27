@@ -6,29 +6,6 @@ Canonical modding guide: [`MODDING_BEST_PRACTICES.md`](MODDING_BEST_PRACTICES.md
 
 ---
 
-## Knowledge Map (Agent Traversal)
-
-Workspace-wide graph + wiki (curated corpus; see `.graphifyignore`):
-
-| Path | Use |
-|---|---|
-| [`graphify-out/wiki/index.md`](graphify-out/wiki/index.md) | Start here: community articles, crawl surface |
-| [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) | God nodes, surprises, suggested questions |
-| [`graphify-out/graph.json`](graphify-out/graph.json) | Structured graph for `graphify query` / `path` / `explain` |
-| [`graphify-out/graph.html`](graphify-out/graph.html) | Interactive graph (browser) |
-
-Agent order: this file → `graphify-out/wiki/` (or `graphify query "…"`) → project `AGENTS.md` / `docs/INDEX.md` → code.
-
-Corpus is curated by [`.graphifyignore`](.graphifyignore) (no `third-party/`, no IL dumps, no builds/saves). Rebuild from workspace root:
-
-```bash
-make graphify          # default: AST + markdown structure (no LLM; reliable)
-make graphify-llm      # optional ollama/cloud semantic
-make graphify-wiki     # re-export wiki from existing graph.json
-```
-
----
-
 ## Projects & Repositories
 
 | Project / Product | Local Folder | Remote GitHub Repository | Primary Role | Details |
